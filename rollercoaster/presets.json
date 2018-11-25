@@ -1,0 +1,19 @@
+{
+  	"manager": ["astips", "root"],
+    "official": {
+        "path": ""
+    },
+    "user": {
+        "path": ""
+    },
+    "context": ["basic"],
+    "theme": ["black", "light-black", "grey", "light-grey"],
+    "const": {
+        "datafile": "data.xml",
+        "snapshot": "snapshot",
+        "compress": "jpg",
+        "additive": ".ADDITIVE"
+    },
+    "template": {"image": "icon_park"},
+    "email": "animator.well@gmail.com"
+}

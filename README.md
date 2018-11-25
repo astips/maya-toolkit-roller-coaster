@@ -1,5 +1,6 @@
 # maya-toolkit-roller-coaster
 Maya toolkit used to save/load pose or animation clip.
 
-#### DEPENDENCY
+#### DEPENDENCIES
 - **QtSide** https://github.com/astips/QtSide
+- **Mirror Plane** https://github.com/astips/maya-plugin-mirror-plane
