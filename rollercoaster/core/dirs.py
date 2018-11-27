@@ -46,7 +46,7 @@ class TempDir(object):
     """
     def __init__(self, *args, **kwargs):
         tempdir = tempfile.gettempdir().replace('\\', '/')
-        self._path = os.path.join(tempdir, *args)
+        self._path = os.path.join(tempdir, *args).replace('\\', '/')
         if kwargs.get('clean', False):
             self.clean()
         if kwargs.get('makedirs', True):

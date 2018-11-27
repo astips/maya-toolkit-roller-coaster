@@ -1,0 +1,363 @@
+/*
+ --------------------------------------------------------------------------
+ QSplitter
+ --------------------------------------------------------------------------
+*/
+
+QSplitter:handle {
+    background-color: rgb(100, 100, 100, 10);
+}
+
+QSplitter::handle:hover {
+    background-color: rgb(255, 255, 255, 100);
+}
+
+
+/*
+ --------------------------------------------------------------------------
+ QCheckBox
+ --------------------------------------------------------------------------
+*/
+
+QCheckBox {
+    color: rgb(255, 255, 255, 200);
+    spacing: 10px;
+}
+
+QCheckBox:disabled {
+    color: rgb(150, 150, 150, 150);
+}
+
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+}
+
+QCheckBox::indicator:checked {
+    image: url(ICON_PATH/icon_checkbox_on.png)
+}
+
+QCheckBox::indicator:unchecked {
+    image: url(ICON_PATH/icon_checkbox_off.png)
+}
+
+
+/*
+ --------------------------------------------------------------------------
+ QRadioButton
+ --------------------------------------------------------------------------
+*/
+
+QRadioButton {
+    color: rgb(255, 255, 255, 200);
+    spacing: 6px;
+}
+
+
+QRadioButton:disabled {
+    color: rgb(150, 150, 150, 150);
+}
+
+QRadioButton::indicator {
+    width: 14px;
+    height: 14px;
+}
+
+QRadioButton::indicator:checked {
+    image: url(ICON_PATH/icon_radiobutton_on.png)
+}
+
+QRadioButton::indicator:unchecked {
+    image: url(ICON_PATH/icon_radiobutton_off.png)
+}
+
+
+/*
+ --------------------------------------------------------------------------
+ QListWidget
+ --------------------------------------------------------------------------
+*/
+
+ListWidget {
+    background-color: rgb(50, 50, 50, 75);
+}
+
+ListWidget::item:selected:active {
+    background-color: rgb(100, 175, 255, 200);
+}
+
+ListWidget::item:selected:!active {
+    background-color: rgb(100, 175, 255, 150);
+}
+
+ListWidget::item:non-selected {
+    background-color: rgb(200, 200, 200, 30);
+}
+
+ListWidget::item:hover {
+    background-color: rgb(100, 175, 255, 125);
+}
+
+
+ListWidget::item {
+    border: 0px;
+    outline: none;
+    border-style: solid;
+    margin: 0px 0px 0px 0px;
+    padding: 0px 0px 0px 0px;
+    background-color: rgb(220, 220, 220, 10);
+}
+
+
+/*
+ --------------------------------------------------------------------------
+ QTreeWidget
+ --------------------------------------------------------------------------
+*/
+
+QTreeWidget {
+    background-color: rgb(50, 50, 50, 75);
+}
+
+QTreeWidget::branch:has-children:!has-siblings:closed,
+QTreeWidget::branch:closed:has-children:has-siblings {
+     border-image: none;
+     image: url(ICON_PATH/icon_right_white.png);
+}
+
+QTreeWidget::branch:open:has-children:!has-siblings,
+QTreeWidget::branch:open:has-children:has-siblings  {
+     border-image: none;
+     image: url(ICON_PATH/icon_down_white.png);
+}
+
+QTreeWidget::item:hover {
+    color: rgb(255, 255, 255, 255);
+}
+
+
+/*
+ --------------------------------------------------------------------------
+ QTabBar
+ --------------------------------------------------------------------------
+*/
+
+QTabBar {
+    qproperty-drawBase: 0;
+    border-radius: 0px;
+    border: 0px rgb(100, 100, 100, 100);
+}
+
+/*QTabWidget::tab-bar {
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    alignment: center;
+}*/
+
+QTabBar::tab {
+    color: rgb(120, 120, 120, 200);
+    background-color: rgb(20, 20, 20, 100);
+    border: 0px ;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+QTabBar::tab:selected {
+    color: rgb(220, 220, 220, 220);
+    background-color: rgb(100, 100, 100, 20);
+}
+
+QTabBar::tab:hover {
+    color: rgb(255, 255, 255, 255);
+}
+
+
+/*
+ --------------------------------------------------------------------------
+ QMenu
+ --------------------------------------------------------------------------
+*/
+
+QMenu::icon:checked { 
+    background: rgba(200, 100, 100, 20);
+    border: 1px inset gray;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+}
+
+QMenu::indicator {
+    width: 16px;
+    height: 16px;
+    background: rgba(100, 100, 100, 20);
+}
+
+QMenu::indicator:non-exclusive:checked {
+    image: url(ICON_PATH/icon_checkbox_on.png)
+}
+
+QMenu::indicator:non-exclusive:unchecked  {
+    image: url(ICON_PATH/icon_checkbox_off.png)
+}
+
+QMenu::indicator:non-exclusive:disabled  {
+    image: url(ICON_PATH/icon_checkbox_off.png)
+}
+
+QMenu::item {
+    border: 1px solid transparent;
+    padding: 3px 25px 3px 25px;
+    color: rgb(255, 255, 255, 200);
+}
+
+QMenu QWidget {
+    font: 11*DPIpx;
+    color: rgb(255, 255, 255, 180);
+    padding: 1px 10px 1px 0px;
+}
+
+QMenu::item:selected {
+    color: rgb(255, 255, 255, 255);
+    background: rgb(100, 175, 255, 100);
+}
+
+QMenu::separator {
+    background-color: rgb(255, 255, 255, 20);
+    height: 1px;
+    padding: 0px 0px 0px 0px;
+    margin-left: 20px;
+    margin-right: 0px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+QMenu::indicator:non-exclusive {
+    width: 14px;
+    height: 14px;
+    padding-left: 2px;
+}
+
+
+/*
+ --------------------------------------------------------------------------
+ QComboBox
+ --------------------------------------------------------------------------
+*/
+
+QComboBox {
+    border: 0px solid rgb(20, 20, 20, 75);
+    border-radius: 2px;
+    padding: 2px 2px 2px 2px;
+}
+
+QComboBox:editable {
+    background: rgb(50, 50, 50, 200);
+}
+
+QComboBox:!editable {
+    background: rgb(50, 50, 50, 200);
+}
+
+QComboBox::QAbstractItemView {
+    border: 10px solid rgb(255, 255, 255, 100);
+}
+
+QComboBox:on { 
+    padding-top: 3px;
+    padding-left: 4px;
+}
+
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 15px;
+    border-left-width: 1px;
+    border-left-color: rgb(100, 100, 100, 100);
+    border-left-style: solid; 
+    border-top-right-radius: 0px; 
+    border-bottom-right-radius: 0px;
+}
+
+QComboBox::down-arrow {
+    width: 16px;
+    height: 16px;
+    image: url(ICON_PATH/icon_arrow_down.png);
+}
+
+
+/*
+ --------------------------------------------------------------------------
+ ColorfulTextLabel
+ --------------------------------------------------------------------------
+*/
+
+ColorfulTextLabel {
+    border-radius: 4px;
+}
+
+ColorfulBGLabel {
+    border-radius: 4px;
+}
+
+
+/*
+ --------------------------------------------------------------------------
+ QSpinBox QDoubleSpinBox
+ --------------------------------------------------------------------------
+*/
+
+QSpinBox, QDoubleSpinBox {
+    border: 0px;
+    height: 25px;
+    padding: 0 4px;
+    border-radius: 0px;
+    background-color: rgb(50, 50, 50, 100);
+    border-bottom: 0px solid rgb(255, 255, 255, 50);
+    selection-color: rgb(255, 255, 255, 230);
+    selection-background-color: rgb(75, 125, 175, 230);
+}
+
+QSpinBox:focus, QDoubleSpinBox:focus {
+    border: 0px solid rgb(75, 125, 175, 230);
+    border-bottom: 2px solid rgb(75, 125, 175, 230);
+    background-color: rgb(255, 255, 255, 30);
+}
+
+
+/*
+ --------------------------------------------------------------------------
+ Slider
+ --------------------------------------------------------------------------
+*/
+
+QSlider::groove:horizontal {
+    height: 3*DPIpx;
+    background: rgb(100, 0, 0, 0);
+}
+
+QSlider::handle:horizontal {
+    background: rgb(100, 175, 255, 255);
+    width: 8*DPIpx;
+    height: 2*DPIpx;
+    margin: -4*DPIpx 0; 
+    border-radius: 5*DPIpx;
+ }
+
+QSlider::add-page:horizontal {
+    border: 0px solid #999999;
+    background-color: rgb(255, 255, 255, 20);
+}
+
+QSlider::sub-page:horizontal {
+    background-color: rgb(100, 175, 255, 255);
+    border-top: 1px solid rgb(100, 175, 255, 255);
+    border-bottom: 1px solid rgb(100, 175, 255, 255);
+}
