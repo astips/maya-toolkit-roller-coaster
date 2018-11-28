@@ -1,15 +1,15 @@
 # maya-toolkit-roller-coaster
-Maya toolkit used to save/load pose or animation clip.
+Maya(2015-2018) toolkit used to save/load pose or animation clip.
 
-#### DEPENDENCY
+### DEPENDENCY
 - **QtSide** https://github.com/astips/QtSide
 - **Mirror Plane** https://github.com/astips/maya-plugin-mirror-plane
 
-#### INSTALLATION
+### INSTALLATION
 1. Download the latest release and unzip the folder where you want to live.
-2. Copy folder "rollercoaster" to %USERPROFILE%\Documents\maya\mayaVersion\scripts
+2. Copy folder "rollercoaster" to %USERPROFILE%\Documents\maya\scripts
 
-#### USAGE
+### USAGE
 Tip: You need to value the _**QT_SIDE_BINDING**_ env var before running the toolkit if you 
 did not set/export this var when maya launched.
 ```python
@@ -31,9 +31,34 @@ run_creator('pose')
 from rollercoaster.main import run_creator
 run_creator('clip')
 ```
+### PRESET > rollercoaster/presets.json
+```json
+{
+    "manager": ["astips", "root"],
+    "official": {
+        "path": ""
+    },
+    "user": {
+        "path": ""
+    },
+    "context": ["basic"],
+    "theme": ["black", "light-black", "grey", "light-grey"],
+    "const": {
+        "datafile": "data.xml",
+        "snapshot": "snapshot",
+        "compress": "jpg",
+        "additive": ".ADDITIVE"
+    },
+    "template": {"image": "icon_park"},
+    "email": "animator.well@gmail.com"
+}
+```
+- "manager" -- define super users of this toolkit (who can manager the **Official Tab**)
+- "context" -- x-rig context names configured by user
+- "email" -- your license register email used to auth professional version license
 
-#### XRIG Context Option > rollercoaster/core/mutils/option
-Because of the diversity of rigging files, rollercoaster tool allow users to config their own
+### XRIG Context Option > rollercoaster/core/mutils/option
+Because of the diversity of rigging files, **rollercoaster** tool allow users config their own
 xrig contexts.
 
 for example : an open source rig file named 'kayla'
@@ -62,7 +87,7 @@ class XRigKayla(XRigBase):
     FACE_FLIP_ATTR = []
 ```
 
-#### SHORTCUTS
+### SHORTCUTS
 - Alt + Q
 - Alt + W
 - Alt + E
@@ -73,6 +98,7 @@ class XRigKayla(XRigBase):
 - Ctrl + X
 - Ctrl + V
 - Ctrl + Z
+- Ctrl + MMouse(Click/Scroll)
 - `
 - Space
 - Esc
