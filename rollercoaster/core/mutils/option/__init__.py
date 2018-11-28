@@ -20,6 +20,6 @@ def xrig_filter(context=None):
     get the filter function from a context name string.
     """
     if context == 'basic':
-        return filter_basic._filter
+        return filter_basic._filter()
     else:
         raise Exception('Invalid XRig Context.')

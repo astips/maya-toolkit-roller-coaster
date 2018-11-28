@@ -10,8 +10,8 @@ Maya toolkit used to save/load pose or animation clip.
 2. Copy folder "rollercoaster" to %USERPROFILE%\Documents\maya\mayaVersion\scripts
 
 #### USAGE
-Tip: You need to value the var before running the toolkit if you 
-did not set/export _**QT_SIDE_BINDING**_ env var when maya launched.
+Tip: You need to value the _**QT_SIDE_BINDING**_ env var before running the toolkit if you 
+did not set/export this var when maya launched.
 ```python
 import os
 os.environ['QT_SIDE_BINDING'] = 'pyside'  # Maya2016: pyside, Maya2017+: pyside2
@@ -22,9 +22,14 @@ from rollercoaster.main import run_editor
 run_editor()
 
 
-# startup creator
+# startup pose creator
 from rollercoaster.main import run_creator
-run_creator()
+run_creator('pose')
+
+
+# startup clip creator
+from rollercoaster.main import run_creator
+run_creator('clip')
 ```
 
 #### XRIG Context Option > rollercoaster/core/mutils/option
@@ -56,4 +61,18 @@ class XRigKayla(XRigBase):
     MD_FLIP_ATTR = []
     FACE_FLIP_ATTR = []
 ```
-#### Thanks
+
+#### SHORTCUTS
+- Alt + Q
+- Alt + W
+- Alt + E
+- Alt + R
+- Alt + (1, 2, 3, 4)
+- Ctrl + Tab
+- Ctrl + C
+- Ctrl + X
+- Ctrl + V
+- Ctrl + Z
+- `
+- Space
+- Esc
