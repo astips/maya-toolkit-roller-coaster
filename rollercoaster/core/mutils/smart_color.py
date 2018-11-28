@@ -7,6 +7,7 @@ class SmartDisplayColor(object):
     """
     recorder & reback display color
     """
+
     def __init__(self):
         self.default = None
 

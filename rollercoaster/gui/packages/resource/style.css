@@ -148,14 +148,6 @@ QTabBar {
     border: 0px rgb(100, 100, 100, 100);
 }
 
-/*QTabWidget::tab-bar {
-    left: 0px;
-    right: 0px;
-    top: 0px;
-    bottom: 0px;
-    alignment: center;
-}*/
-
 QTabBar::tab {
     color: rgb(120, 120, 120, 200);
     background-color: rgb(20, 20, 20, 100);

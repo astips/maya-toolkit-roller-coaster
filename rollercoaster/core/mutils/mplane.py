@@ -50,38 +50,38 @@ def magicMirror(src=None, dst=None, plane=None, active=False, space='world', con
     )
 
     helpBMatrix = OpenMaya.MMatrix()
-    if context == 'whd creative':
+    if context == 'creative':
         OpenMaya.MScriptUtil.createMatrixFromList([-1,  0,  0, 0,
                                                     0, -1,  0, 0,
                                                     0,  0, -1, 0,
                                                     0,  0,  0, 1], helpBMatrix)
 
-    elif context == 'whd rlo':
+    elif context == 'rlo':
         OpenMaya.MScriptUtil.createMatrixFromList([-1, 0, 0, 0,
                                                     0, 1, 0, 0,
                                                     0, 0, 1, 0,
                                                     0, 0, 0, 1], helpBMatrix)
 
-    elif context == 'whd biped system':
+    elif context == 'biped system':
         OpenMaya.MScriptUtil.createMatrixFromList([-1, 0, 0, 0,
                                                     0, 1, 0, 0,
                                                     0, 0, 1, 0,
                                                     0, 0, 0, 1], helpBMatrix)
 
-    elif context == 'cwt':
+    elif context == 'base':
         OpenMaya.MScriptUtil.createMatrixFromList([-1, 0, 0, 0,
                                                     0, 1, 0, 0,
                                                     0, 0, 1, 0,
                                                     0, 0, 0, 1], helpBMatrix)
 
-    elif context == 'as malcolm':
+    elif context == 'malcolm':
         OpenMaya.MScriptUtil.createMatrixFromList([-1, 0, 0, 0,
                                                     0, 1, 0, 0,
                                                     0, 0, 1, 0,
                                                     0, 0, 0, 1], helpBMatrix)
 
     else:
-        raise Exception('Wrong context !')
+        raise Exception('Invalid context !')
 
     aimMatrix = srcMatrix * planeMatrixInverse * helpAMatrix * planeMatrix
     aimMatrix = helpBMatrix * aimMatrix
