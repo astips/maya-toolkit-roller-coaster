@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 import pymel.core as pm
 
 
@@ -18,7 +17,6 @@ class SmartPanel(object):
         sp.reback()
         sp.clean()
     """
-
     def __init__(self, panels):
 
         self.v_types = ['nc', 'ns', 'pm', 'sds', 'pl', 'lt', 'ca', 'j', 'ikh', 'df', 

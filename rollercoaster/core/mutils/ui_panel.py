@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 import string
 import random
 import pymel.core as pm

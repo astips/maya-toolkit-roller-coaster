@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 from QtSide import QtWidgets, ui_wrapper
 import maya.OpenMayaUI as OpenMayaUI
 

@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 import pymel.core as pm
 
 
@@ -8,7 +7,6 @@ class SmartDisplayColor(object):
     """
     recorder & reback display color
     """
-
     def __init__(self):
         self.default = None
 
