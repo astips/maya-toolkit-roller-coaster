@@ -108,15 +108,17 @@ class XRigKayla(XRigBase):
 
 
 ### GIF IMAGES
-
-- Set Path
+-
+- **Set Path**
 ![Example UI](images/setpath.gif)
-- Create Folder Tree
+
+- **Create Folder Tree**
 ![Example UI](images/createtree.gif)
-- Create Pose
+
+- **Create Pose**
 ![Example UI](images/createpose.gif)
 
 ### HAVING ISSUES?
 Please send an email with the error message and a detailed step by step process of how you got the error.
-Comments, suggestions and bug reports are welcome. 
-Email: animator.well@gmail.com
+Comments, suggestions and bug reports are welcome.  
+- Email: _animator.well@gmail.com_
