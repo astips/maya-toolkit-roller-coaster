@@ -1,13 +1,16 @@
 # maya-toolkit-roller-coaster
 Maya(2015-2018) toolkit used to save/load pose or animation clip.
 
+![Example UI](images/about.png)
+
+
 ### DEPENDENCY
 - **QtSide** https://github.com/astips/QtSide
 - **Mirror Plane** https://github.com/astips/maya-plugin-mirror-plane
 
 ### INSTALLATION
 1. Download the latest release and unzip the folder where you want to live.
-2. Copy folder "rollercoaster" to %USERPROFILE%\Documents\maya\scripts
+2. Copy folder "rollercoaster" to %USERPROFILE%/Documents/maya/scripts
 
 ### USAGE
 Tip: You need to value the _**QT_SIDE_BINDING**_ env var before running the toolkit if you 
@@ -98,11 +101,20 @@ class XRigKayla(XRigBase):
 - Ctrl + X
 - Ctrl + V
 - Ctrl + Z
-- Ctrl + MMouse(Click/Scroll)
+- Ctrl + MMouse(Click/Wheel)
 - `
 - Space
 - Esc
 
+
+### GIF IMAGES
+
+- Set Path
+![Example UI](images/setpath.gif)
+- Create Folder Tree
+![Example UI](images/createtree.gif)
+- Create Pose
+![Example UI](images/createpose.gif)
 
 ### HAVING ISSUES?
 Please send an email with the error message and a detailed step by step process of how you got the error.

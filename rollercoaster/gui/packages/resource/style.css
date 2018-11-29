@@ -91,7 +91,7 @@ ListWidget::item:selected:!active {
 }
 
 ListWidget::item:non-selected {
-    background-color: rgb(200, 200, 200, 30);
+    background-color: rgb(100, 100, 100, 50);
 }
 
 ListWidget::item:hover {
