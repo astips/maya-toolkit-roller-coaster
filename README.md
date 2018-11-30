@@ -60,9 +60,9 @@ run_creator('clip')
 - "context" -- x-rig context names configured by user
 - "email" -- your license register email used to auth professional version license
 
-### XRIG Context Option > rollercoaster/core/mutils/option
+### XRIG Context Option > rollercoaster/opt/xrig
 Because of the diversity of rigging files, **rollercoaster** tool allow users config their own
-xrig contexts.
+xrig & filter contexts.
 
 for example : an open source rig file named 'kayla'
 
@@ -88,6 +88,21 @@ class XRigKayla(XRigBase):
     IK_FLIP_ATTR = []
     MD_FLIP_ATTR = []
     FACE_FLIP_ATTR = []
+```
+### FILTER Context Option > rollercoaster/opt/filter
+Also because of the diversity of rigging files, **rollercoaster** tool allow users config their own
+filter contexts.
+
+for example : an open source rig file named 'kayla', if you only want to deal with nurbscurves,
+then you can define the filter module like this.
+
+```python
+import maya.OpenMaya as OpenMaya
+from .base import FilterBase
+
+class FilterContext(FilterBase):
+    def filler(self):
+        self.int_array.append(OpenMaya.MFn().kNurbsCurve)
 ```
 
 ### SHORTCUTS
