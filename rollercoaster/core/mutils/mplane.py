@@ -122,20 +122,22 @@ def magicMirror(src=None, dst=None, plane=None, active=False, space='world', con
         elif space == 'object':
             dstTransform.setTranslation(OpenMaya.MVector(aimTranslates), OpenMaya.MSpace.kTransform)
             dstTransform.setRotation(aimRotatesQuaternion, OpenMaya.MSpace.kTransform)
+        else:
+            raise Exception('Invalid space: {0}'.format(space))
     else:
         if space == 'world':
             return dstTransform, aimTranslation, aimRotationQuaternion, dstOldTranslation, dstOldRotationQuaternion
         elif space == 'object':
             return dstTransform, OpenMaya.MVector(aimTranslates), aimRotatesQuaternion
+        else:
+            raise Exception('Invalid space: {0}'.format(space))
 
-        # return {
-        #         'translateX': aimTranslates[0], 
+        # return {'translateX': aimTranslates[0],
         #         'translateY': aimTranslates[1], 
         #         'translateZ': aimTranslates[2], 
         #         'rotateX': aimRotatesEuler[0], 
         #         'rotateY': aimRotatesEuler[1], 
-        #         'rotateZ': aimRotatesEuler[2], 
-        #         }
+        #         'rotateZ': aimRotatesEuler[2]}
 
 
 def _loadPlugin():

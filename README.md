@@ -13,8 +13,8 @@ Maya(2015-2018) toolkit used to save/load pose or animation clip.
 2. Copy folder "rollercoaster" to %USERPROFILE%/Documents/maya/scripts
 
 ### USAGE
-Tip: You need to value the _**QT_SIDE_BINDING**_ env var before running the toolkit if you 
-did not set/export this var when maya launched.
+Tip: You need to value the _**QT_SIDE_BINDING**_ env-var before running the toolkit if you 
+did not set it up when maya launched.
 ```python
 import os
 os.environ['QT_SIDE_BINDING'] = 'pyside'  # Maya2016: pyside, Maya2017+: pyside2
@@ -104,6 +104,7 @@ class XRigKayla(XRigBase):
 - Ctrl + MMouse(Click/Wheel)
 - `
 - Space
+- Delete
 - Esc
 
 
@@ -121,4 +122,3 @@ class XRigKayla(XRigBase):
 ### HAVING ISSUES?
 Please send an email with the error message and a detailed step by step process of how you got the error.
 Comments, suggestions and bug reports are welcome.  
-- Email: _animator.well@gmail.com_
