@@ -109,7 +109,7 @@ class XRigKayla(XRigBase):
 
 
 ### GIF IMAGES
--
+
 - **Set Path**
 ![Example UI](images/setpath.gif)
 
