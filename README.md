@@ -1,5 +1,5 @@
 # maya-toolkit-roller-coaster
-Maya(2015-2018) toolkit used to save/load pose or animation clip.
+Maya(2015-2018) toolkit used to save/load pose and animation clip.
 
 ![Example UI](images/about.png)
 
@@ -106,21 +106,21 @@ class FilterContext(FilterBase):
 ```
 
 ### SHORTCUTS
-- Alt + Q
-- Alt + W
-- Alt + E
-- Alt + R
-- Alt + (1, 2, 3, 4)
-- Ctrl + Tab
-- Ctrl + C
-- Ctrl + X
-- Ctrl + V
-- Ctrl + Z
-- Ctrl + MMouse(Click/Wheel)
-- `
-- Space
-- Delete
-- Esc
+- **Alt + Q**                       _`Hide/Show Left Widget`_
+- **Alt + W**                       _`Hide/Show Right Widget`_
+- **Alt + E**                       _`Hide/Show Middle-Up Widget`_
+- **Alt + R**                       _`Hide/Show Middle Option Widget`_
+- **Alt + (1, 2, 3, 4)**            _`Auto Fit Size of Pose/Clip Items`_
+- **Ctrl + Tab**                    _`Switch Official/User Tab`_
+- **Ctrl + C**                      _`Copy Tree Item`_
+- **Ctrl + X**                      _`Cut Tree Item`_
+- **Ctrl + V**                      _`Paste Tree Item`_
+- **Ctrl + Z**                      _`Undo Apply Pose`_
+- **Ctrl + MMouse(Click/Wheel)**    _`Interactive Apply Pose`_
+- **\`**                            _`Hide/Show Pose&Clip Label`_
+- **Space**                         _`Switch Pose/Clip Snapshots`_ 
+- **Delete**                        _`Delete Pose/Clip Item`_
+- **Esc**                           _`Mini/Max Main Gui`_
 
 
 ### GIF IMAGES
@@ -134,6 +134,10 @@ class FilterContext(FilterBase):
 - **Create Pose**
 ![Example UI](images/createpose.gif)
 
+
+### ATTENTION !
+- Undo: Import Animation Clip Can't Undo For Now !
+   
 ### HAVING ISSUES?
 Please send an email with the error message and a detailed step by step process of how you got the error.
 Comments, suggestions and bug reports are welcome.  
