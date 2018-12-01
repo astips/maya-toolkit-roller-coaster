@@ -4,7 +4,6 @@ import fnmatch
 
 
 class XRigBase(object):
-
     CONTEXT_NAME = 'base'
 
     CTRL_TAG = []
@@ -120,3 +119,32 @@ class XRigBase(object):
         if attr in self.FACE_FLIP_ATTR:
             return True
         return False
+
+
+TEMPLATE = """
+# -*- coding: utf-8 -*-
+
+from .base import XRigBase
+
+
+class XRigContext(XRigBase):
+    CONTEXT_NAME = {CONTEXT_NAME}
+
+    CTRL_TAG = [{CTRL_TAG}]
+
+    LT_CTRL_TAG = [{LT_CTRL_TAG}]
+    LT_CTRL_FORMAT = [{LT_CTRL_FORMAT}]
+
+    MD_CTRL_TAG = [{MD_CTRL_TAG}]
+    MD_CTRL_FORMAT = [{MD_CTRL_FORMAT}]
+
+    RT_CTRL_TAG = [{RT_CTRL_TAG}]
+    RT_CTRL_FORMAT = [{RT_CTRL_FORMAT}]
+
+    IK_CTRL_TAG = [{IK_CTRL_TAG}]
+    FK_CTRL_TAG = [{FK_CTRL_TAG}]
+
+    IK_FLIP_ATTR = [{IK_FLIP_ATTR}]
+    MD_FLIP_ATTR = [{MD_FLIP_ATTR}]
+    FACE_FLIP_ATTR = [{FACE_FLIP_ATTR}]
+"""

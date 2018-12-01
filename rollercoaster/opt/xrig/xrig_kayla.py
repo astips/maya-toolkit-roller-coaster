@@ -5,6 +5,7 @@ from .base import XRigBase
 
 class XRigKayla(XRigBase):
     CONTEXT_NAME = 'kayla'
+
     CTRL_TAG = ['_CON']
 
     LT_CTRL_TAG = ['L_']

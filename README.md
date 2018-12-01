@@ -8,9 +8,11 @@ Maya(2015-2018) toolkit used to save/load pose and animation clip.
 - **QtSide** https://github.com/astips/QtSide
 - **Mirror Plane** https://github.com/astips/maya-plugin-mirror-plane
 
+
 ### INSTALLATION
 1. Download the latest release and unzip the folder where you want to live.
 2. Copy folder "rollercoaster" to %USERPROFILE%/Documents/maya/scripts
+
 
 ### USAGE
 Tip: You need to value the _**QT_SIDE_BINDING**_ env-var before running the toolkit if you 
@@ -34,6 +36,8 @@ run_creator('pose')
 from rollercoaster.main import run_creator
 run_creator('clip')
 ```
+
+
 ### PRESET > rollercoaster/presets.json
 ```json
 {
@@ -59,6 +63,7 @@ run_creator('clip')
 - "manager" -- define super users of this toolkit (who can manager the **Official Tab**)
 - "context" -- x-rig context names configured by user
 - "email" -- your license register email used to auth professional version license
+
 
 ### XRIG Context Option > rollercoaster/opt/xrig
 Because of the diversity of rigging files, **rollercoaster** tool allow users config their own
@@ -89,6 +94,8 @@ class XRigKayla(XRigBase):
     MD_FLIP_ATTR = []
     FACE_FLIP_ATTR = []
 ```
+
+
 ### FILTER Context Option > rollercoaster/opt/filter
 Also because of the diversity of rigging files, **rollercoaster** tool allow users config their own
 filter contexts.
@@ -136,8 +143,10 @@ class FilterContext(FilterBase):
 
 
 ### ATTENTION !
-- Undo: Import Animation Clip Can't Undo For Now !
-   
+- login Name: Your workstation's login name should be in english with no space !
+- Undo: Import Animation-Clip can't undo for now !
+ 
+ 
 ### HAVING ISSUES?
 Please send an email with the error message and a detailed step by step process of how you got the error.
 Comments, suggestions and bug reports are welcome.  

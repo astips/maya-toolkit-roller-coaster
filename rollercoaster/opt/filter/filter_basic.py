@@ -5,6 +5,7 @@ from .base import FilterBase
 
 
 class FilterContext(FilterBase):
+    CONTEXT_NAME = 'basic'
 
     def filler(self):
         self.int_array.append(OpenMaya.MFn().kNurbsCurve)
