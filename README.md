@@ -110,6 +110,7 @@ from .base import FilterBase
 
 class FilterContext(FilterBase):
     CONTEXT_NAME = 'kayla'
+    
     def filler(self):
         self.int_array.append(OpenMaya.MFn().kNurbsCurve)
 ```
@@ -143,6 +144,8 @@ class FilterContext(FilterBase):
 - **Create Pose**
 ![Example UI](images/createpose.gif)
 
+- **Apply Pose**
+![Example UI](images/applypose.gif)
 
 ### ATTENTION !
 - Login Name: Your workstation's login name should be in english with no space !
