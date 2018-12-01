@@ -3,7 +3,7 @@
 from .base import XRigBase
 
 
-class XRigKayla(XRigBase):
+class XRigContext(XRigBase):
     CONTEXT_NAME = 'kayla'
 
     CTRL_TAG = ['_CON']

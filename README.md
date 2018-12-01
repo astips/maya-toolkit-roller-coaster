@@ -1,5 +1,5 @@
 # maya-toolkit-roller-coaster
-Maya(2015-2018) toolkit used to save/load pose and animation clip.
+Maya(2016-2018) toolkit used to save/load pose and animation clip.
 
 ![Example UI](images/about.png)
 
@@ -74,8 +74,9 @@ for example : an open source rig file named 'kayla'
 ```python
 from .base import XRigBase
 
-class XRigKayla(XRigBase):
+class XRigContext(XRigBase):
     CONTEXT_NAME = 'kayla'
+    
     CTRL_TAG = ['_CON']
 
     LT_CTRL_TAG = ['L_']
@@ -108,26 +109,27 @@ import maya.OpenMaya as OpenMaya
 from .base import FilterBase
 
 class FilterContext(FilterBase):
+    CONTEXT_NAME = 'kayla'
     def filler(self):
         self.int_array.append(OpenMaya.MFn().kNurbsCurve)
 ```
 
 ### SHORTCUTS
-- **Alt + Q**                       _`Hide/Show Left Widget`_
-- **Alt + W**                       _`Hide/Show Right Widget`_
-- **Alt + E**                       _`Hide/Show Middle-Up Widget`_
-- **Alt + R**                       _`Hide/Show Middle Option Widget`_
-- **Alt + (1, 2, 3, 4)**            _`Auto Fit Size of Pose/Clip Items`_
-- **Ctrl + Tab**                    _`Switch Official/User Tab`_
-- **Ctrl + C**                      _`Copy Tree Item`_
-- **Ctrl + X**                      _`Cut Tree Item`_
-- **Ctrl + V**                      _`Paste Tree Item`_
-- **Ctrl + Z**                      _`Undo Apply Pose`_
-- **Ctrl + MMouse(Click/Wheel)**    _`Interactive Apply Pose`_
-- **\`**                            _`Hide/Show Pose&Clip Label`_
-- **Space**                         _`Switch Pose/Clip Snapshots`_ 
-- **Delete**                        _`Delete Pose/Clip Item`_
-- **Esc**                           _`Mini/Max Main Gui`_
+- **Alt + Q**                          _`Hide/Show Left Widget`_
+- **Alt + W**                          _`Hide/Show Right Widget`_
+- **Alt + E**                          _`Hide/Show Middle-Up Widget`_
+- **Alt + R**                          _`Hide/Show Middle Option Widget`_
+- **Alt + (1, 2, 3, 4)**               _`Auto Fit Size of Pose/Clip Items`_
+- **Ctrl + Tab**                       _`Switch Official/User Tab`_
+- **Ctrl + C**                         _`Copy Tree Item`_
+- **Ctrl + X**                         _`Cut Tree Item`_
+- **Ctrl + V**                         _`Paste Tree Item`_
+- **Ctrl + Z**                         _`Undo Apply Pose`_
+- **Ctrl + MMouse(Click/Wheel)**       _`Interactive Apply Pose`_
+- **\`**                               _`Hide/Show Pose&Clip Label`_
+- **Space**                            _`Switch Pose/Clip Snapshots`_ 
+- **Delete**                           _`Delete Pose/Clip Item`_
+- **Esc**                              _`Mini/Max Main Gui`_
 
 
 ### GIF IMAGES
@@ -143,7 +145,7 @@ class FilterContext(FilterBase):
 
 
 ### ATTENTION !
-- login Name: Your workstation's login name should be in english with no space !
+- Login Name: Your workstation's login name should be in english with no space !
 - Undo: Import Animation-Clip can't undo for now !
  
  

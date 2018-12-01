@@ -6,7 +6,7 @@
     "user": {
         "path": ""
     },
-    "context": ["basic"],
+    "context": ["basic", "kayla"],
     "theme": ["black", "light-black", "grey", "light-grey"],
     "const": {
         "datafile": "data.xml",
