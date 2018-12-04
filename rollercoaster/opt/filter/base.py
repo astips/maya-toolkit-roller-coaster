@@ -39,6 +39,6 @@ from .base import FilterBase
 class FilterContext(FilterBase):
     CONTEXT_NAME = '{CONTEXT_NAME}'
     
-    def filler(self):
+    def build(self):
         {APPEND_LOOP}
 """
