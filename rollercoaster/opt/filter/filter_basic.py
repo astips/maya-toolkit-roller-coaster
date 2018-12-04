@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
-import maya.OpenMaya as OpenMaya
 from .base import FilterBase
 
 
 class FilterContext(FilterBase):
     CONTEXT_NAME = 'basic'
 
-    def filler(self):
-        self.int_array.append(OpenMaya.MFn().kNurbsCurve)
-        self.int_array.append(OpenMaya.MFn().kCamera)
-        self.int_array.append(OpenMaya.MFn().kStereoCameraMaster)
+    def build(self):
+        self.append(267)  # OpenMaya.MFn().kNurbsCurve
+        self.append(250)  # OpenMaya.MFn().kCamera
+        self.append(1041)  # OpenMaya.MFn().kStereoCameraMaster

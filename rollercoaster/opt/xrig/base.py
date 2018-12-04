@@ -128,7 +128,7 @@ from .base import XRigBase
 
 
 class XRigContext(XRigBase):
-    CONTEXT_NAME = {CONTEXT_NAME}
+    CONTEXT_NAME = '{CONTEXT_NAME}'
 
     CTRL_TAG = [{CTRL_TAG}]
 

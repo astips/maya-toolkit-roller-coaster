@@ -21,22 +21,38 @@ did not set it up when maya launched.
 import os
 os.environ['QT_SIDE_BINDING'] = 'pyside'  # Maya2016: pyside, Maya2017+: pyside2
 ```
+
+- Startup Editor
 ```python
 # startup editor
 from rollercoaster.main import run_editor
 run_editor()
-
-
+```
+- Startup Creator
+```python
 # startup pose creator
 from rollercoaster.main import run_creator
 run_creator('pose')
-
 
 # startup clip creator
 from rollercoaster.main import run_creator
 run_creator('clip')
 ```
+- Startup Context Maker
+```python
+from rollercoaster.main import run_context_maker
+run_context_maker()
+```
+- Enable / Disable Hotkey  (Hotkey: [d + left-mouse])
+```python
+# enable hotkey
+from rollercoaster.main import enable_hotkey
+enable_hotkey()
 
+# disable hotkey
+from rollercoaster.main import disable_hotkey
+disable_hotkey()
+```
 
 ### PRESET > rollercoaster/presets.json
 ```json
@@ -48,7 +64,7 @@ run_creator('clip')
     "user": {
         "path": ""
     },
-    "context": ["basic"],
+    "context": ["basic", "kayla"],
     "theme": ["black", "light-black", "grey", "light-grey"],
     "const": {
         "datafile": "data.xml",
@@ -105,14 +121,13 @@ for example : an open source rig file named 'kayla', if you only want to deal wi
 then you can define the filter module like this.
 
 ```python
-import maya.OpenMaya as OpenMaya
 from .base import FilterBase
 
 class FilterContext(FilterBase):
     CONTEXT_NAME = 'kayla'
     
     def filler(self):
-        self.int_array.append(OpenMaya.MFn().kNurbsCurve)
+        self.append(267)  # OpenMaya.MFn().kNurbsCurve
 ```
 
 ### SHORTCUTS
