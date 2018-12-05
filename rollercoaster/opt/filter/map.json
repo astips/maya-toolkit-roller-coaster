@@ -1,11 +1,20 @@
 {
   	"kAssembly": 1074,
+    "kAsset": 1011,
     "kCamera": 250,
     "kCameraSet": 1004,
+    "kConstraint": 927,
+    "kDagNode": 107,
     "kFollicle": 930,
     "kIkHandle": 120,
+    "kImagePlane": 368,
     "kJoint": 121,
     "kLocator": 281,
     "kMesh": 296,
-    "kNurbsCurve": 267
+    "kNurbsCube": 80,
+    "kNurbsCurve": 267,
+    "kNurbsPlane": 79,
+    "kNurbsSquare": 616,
+    "kNurbsSurface": 294,
+    "kSurface": 293
 }

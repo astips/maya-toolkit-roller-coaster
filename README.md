@@ -1,8 +1,19 @@
 # maya-toolkit-roller-coaster
-Maya(2016-2018) toolkit used to save/load pose and animation clip.
+Maya toolkit used to save/load pose and animation-clip.
 
 ![Example UI](images/about.png)
 
+### FEATURE
+- Save pose and animation-clip
+- Copy/Paste pose and animation-clip
+- Mirror/Flip pose
+- MMB drag for fast pose blending
+- Insert, merge and replace animation
+- LMB drag and drop to organize items
+- Custom rig context
+- Marking menu for Maya
+- Supports Windows, Linux
+- Supports Maya 2016, 2017 and 2018
 
 ### DEPENDENCY
 - **QtSide** https://github.com/astips/QtSide
