@@ -24,7 +24,6 @@ os.environ['QT_SIDE_BINDING'] = 'pyside'  # Maya2016: pyside, Maya2017+: pyside2
 
 - Startup Editor
 ```python
-# startup editor
 from rollercoaster.main import run_editor
 run_editor()
 ```
@@ -43,7 +42,7 @@ run_creator('clip')
 from rollercoaster.main import run_context_maker
 run_context_maker()
 ```
-- Enable / Disable Hotkey  (Hotkey: [d + left-mouse])
+- Enable / Disable Hotkey  > Hotkey: [d + left-mouse]
 ```python
 # enable hotkey
 from rollercoaster.main import enable_hotkey
@@ -81,12 +80,12 @@ disable_hotkey()
 - "email" -- your license register email used to auth professional version license
 
 
-### XRIG Context Option > rollercoaster/opt/xrig
+### CONTEXT
 Because of the diversity of rigging files, **rollercoaster** tool allow users config their own
 xrig & filter contexts.
 
+- **XRIG Context Option** > rollercoaster/opt/xrig
 for example : an open source rig file named 'kayla'
-
 ```python
 from .base import XRigBase
 
@@ -112,14 +111,9 @@ class XRigContext(XRigBase):
     FACE_FLIP_ATTR = []
 ```
 
-
-### FILTER Context Option > rollercoaster/opt/filter
-Also because of the diversity of rigging files, **rollercoaster** tool allow users config their own
-filter contexts.
-
+- **FILTER Context Option** > rollercoaster/opt/filter
 for example : an open source rig file named 'kayla', if you only want to deal with nurbscurves,
 then you can define the filter module like this.
-
 ```python
 from .base import FilterBase
 
@@ -161,6 +155,10 @@ class FilterContext(FilterBase):
 
 - **Apply Pose**
 ![Example UI](images/applypose.gif)
+
+- **HotKey**
+![Example UI](images/hotkey.png)
+
 
 ### ATTENTION !
 - Login Name: Your workstation's login name should be in english with no space !
