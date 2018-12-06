@@ -74,7 +74,7 @@ disable_hotkey()
     "user": {
         "path": ""
     },
-    "context": ["basic", "kayla"],
+    "context": ["basic", "kayla", "hero"],
     "theme": ["black", "light-black", "grey", "light-grey"],
     "const": {
         "datafile": "data.xml",
@@ -82,7 +82,7 @@ disable_hotkey()
         "compress": "jpg",
         "additive": ".ADDITIVE"
     },
-    "template": {"image": "icon_park"},
+    "template": {"image": "icon_about"},
     "email": "animator.well@gmail.com"
 }
 ```
@@ -96,6 +96,7 @@ Because of the diversity of rigging files, **rollercoaster** tool allow users co
 xrig & filter contexts.
 
 - **XRIG Context Option** > rollercoaster/opt/xrig
+_**Define rig's name-convention & axis-convention**_
 for example : an open source rig file named 'kayla'
 ```python
 from .base import XRigBase
@@ -123,6 +124,7 @@ class XRigContext(XRigBase):
 ```
 
 - **FILTER Context Option** > rollercoaster/opt/filter
+_**Define maya objects selection filter._**
 for example : an open source rig file named 'kayla', if you only want to deal with nurbscurves,
 then you can define the filter module like this.
 ```python

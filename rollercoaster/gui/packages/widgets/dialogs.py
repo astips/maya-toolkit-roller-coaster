@@ -25,5 +25,5 @@ class LimitInputDialog(QtWidgets.QInputDialog):
     def __check(self):
         text = to_utf8(self.textValue())
         if text:
-            if not fnmatch.fnmatch(text[-1], '[a-zA-z0-9]'):
+            if not fnmatch.fnmatch(text[-1], '[a-zA-z0-9_]'):
                 self.setTextValue(text[0:-1])

@@ -359,15 +359,16 @@ class ImageSequenceLabel(QtWidgets.QLabel):
     PERCENT_COLOR = QtGui.QColor(255, 255, 255, 100)
     PERCENT_HEIGHT = 2
 
-    def __init__(self, parent=None, fps=24, timer=5, *args):
+    def __init__(self, parent=None, fps=24, timer=5, image_format='.jpg', *args):
         QtWidgets.QLabel.__init__(self, parent, *args)
 
         self.__style()
         self._fps = fps
         self.timer = timer * 100
+        self.image_format = image_format
 
         self._filename = None
-        self._image_sequence = ImageSequence(self._fps)
+        self._image_sequence = ImageSequence(fps=self._fps, image_format=self.image_format)
         self._image_sequence.frame_changed.connect(self._frame_changed)
 
         self.player_install = False
@@ -459,13 +460,13 @@ class ImageSequenceLabel(QtWidgets.QLabel):
 
 
 class ImageSequence(QtCore.QObject):
-    IMAGE_TYPE = 'jpg'
     frame_changed = QtCore.pyqtSignal()
 
-    def __init__(self, fps=24, *args):
+    def __init__(self, fps=24, image_format='.jpg', *args):
         QtCore.QObject.__init__(self, *args)
 
         self._fps = fps
+        self.image_format = image_format
         self._timer = None
         self._frame = 0
         self._frames = []
@@ -475,13 +476,15 @@ class ImageSequence(QtCore.QObject):
     def set_dir(self, dirname):
         def natural_sort_items(items):
             convert = lambda text: (int(text) if text.isdigit() else text)
-            alphanum_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
-            items.sort(key=alphanum_key)
+            _key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+            items.sort(key=_key)
 
         self._dirname = dirname
         if os.path.isdir(dirname):
-            self._frames = [os.path.join(dirname, filename) for filename in os.listdir(dirname) if
-                            filename.endswith(self.IMAGE_TYPE)]
+            self._frames = [
+                os.path.join(dirname, filename) for filename in os.listdir(dirname)
+                if filename.endswith(self.image_format)
+            ]
             natural_sort_items(self._frames)
 
     def dirname(self):

@@ -24,7 +24,7 @@ def create_menu():
         menu_item = cmds.menuItem(
             parent=parent, label=label, command=command,
             subMenu=sub_menu, tearOff=False, optionBox=option_box, enable=True, data=0,
-            enableCommandRepeat=enable_command_repeat, boldFont=True, sourceType='python', **kwargs
+            enableCommandRepeat=enable_command_repeat, boldFont=False, sourceType='python', **kwargs
         )
         return menu_item
 
