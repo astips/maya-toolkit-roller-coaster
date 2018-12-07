@@ -144,7 +144,7 @@ def _loadPlugin():
     try:
         cmds.loadPlugin(PLUGIN_NAME, quiet=True)
         return True
-    except:
+    except OSError:
         import traceback
         print traceback.format_exc()
         return False

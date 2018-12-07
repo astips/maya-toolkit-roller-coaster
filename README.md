@@ -176,6 +176,7 @@ class FilterContext(FilterBase):
 ### ATTENTION !
 - Login Name: Your workstation's login name should be in english with no space !
 - Undo: Import Animation-Clip can't undo for now !
+- Community version has full features but quantitative restrictions, such as can only create 2 Shows.
  
  
 ### HAVING ISSUES?

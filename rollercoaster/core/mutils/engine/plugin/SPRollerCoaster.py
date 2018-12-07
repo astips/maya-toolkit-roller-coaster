@@ -174,6 +174,7 @@ class SouthParkBlendBuild(OpenMayaMPx.MPxCommand):
         if self._namespace is None:
             self._namespace = _namespace()
             if self._namespace is None:
+                # return
                 raise Exception('Select Objects.')
 
         sceneDatas = get_atomic_data(mode=self.travel_mode, channel_box=self._channel, context=self._context)
@@ -185,8 +186,6 @@ class SouthParkBlendBuild(OpenMayaMPx.MPxCommand):
 
         xmlNodes = xmlDatas.keys()
         for nodeName, attrsDict in sceneDatas.iteritems():
-            switchNodeName = None
-
             if self._modify == 'NORMAL':
                 switchNodeName = nodeName
 
@@ -1205,55 +1204,55 @@ def initializePlugin(mobject):
 
     try:
         mplugin.registerCommand(kPluginCmdBlendBuild, blendBuildCmdCreator, blendBuildSyntaxCreator)
-    except:
+    except OSError:
         sys.stderr.write('Failed to register command: {0}'.format(kPluginCmdBlendBuild))
         raise Exception('Failed to register command: {0}'.format(kPluginCmdBlendBuild))
 
     try:
         mplugin.registerCommand(kPluginCmdBlend, blendCmdCreator, blendSyntaxCreator)
-    except:
+    except OSError:
         sys.stderr.write('Failed to register command: {0}'.format(kPluginCmdBlend))
         raise Exception('Failed to register command: {0}'.format(kPluginCmdBlend))
 
     try:
         mplugin.registerCommand(kPluginCmdSelectByXml, selectByXmlCmdCreator, selectByXmlSyntaxCreator)
-    except:
+    except OSError:
         sys.stderr.write('Failed to register command: {0}'.format(kPluginCmdSelectByXml))
         raise Exception('Failed to register command: {0}'.format(kPluginCmdSelectByXml))
 
     try:
         mplugin.registerCommand(kPluginCmdCopyPose, copyPoseCmdCreator, copyPoseSyntaxCreator)
-    except:
+    except OSError:
         sys.stderr.write('Failed to register command: {0}'.format(kPluginCmdCopyPose))
         raise Exception('Failed to register command: {0}'.format(kPluginCmdCopyPose))
 
     try:
         mplugin.registerCommand(kPluginCmdPastePose, pastePoseCmdCreator, pastePoseSyntaxCreator)
-    except:
+    except OSError:
         sys.stderr.write('Failed to register command: {0}'.format(kPluginCmdPastePose))
         raise Exception('Failed to register command: {0}'.format(kPluginCmdPastePose))
 
     try:
         mplugin.registerCommand(kPluginCmdMirrorPose, mirrorPoseCmdCreator, mirrorPoseSyntaxCreator)
-    except:
+    except OSError:
         sys.stderr.write('Failed to register command: {0}'.format(kPluginCmdMirrorPose))
         raise Exception('Failed to register command: {0}'.format(kPluginCmdMirrorPose))
 
     try:
         mplugin.registerCommand(kPluginCmdFlipPose, flipPoseCmdCreator, flipPoseSyntaxCreator)
-    except:
+    except OSError:
         sys.stderr.write('Failed to register command: {0}'.format(kPluginCmdFlipPose))
         raise Exception('Failed to register command: {0}'.format(kPluginCmdFlipPose))
 
     try:
         mplugin.registerCommand(kPluginCmdMirrorSelect, mirrorSelectCmdCreator, mirrorSelectSyntaxCreator)
-    except:
+    except OSError:
         sys.stderr.write('Failed to register command: {0}'.format(kPluginCmdMirrorSelect))
         raise Exception('Failed to register command: {0}'.format(kPluginCmdMirrorSelect))
 
     try:
         mplugin.registerCommand(kPluginCmdReset, resetCmdCreator, resetSyntaxCreator)
-    except:
+    except OSError:
         sys.stderr.write('Failed to register command: {0}'.format(kPluginCmdReset))
         raise Exception('Failed to register command: {0}'.format(kPluginCmdReset))
 
@@ -1263,54 +1262,54 @@ def uninitializePlugin(mobject):
 
     try:
         mplugin.deregisterCommand(kPluginCmdBlendBuild)  
-    except:
+    except OSError:
         sys.stderr.write('Failed to un-register command: {0}'.format(kPluginCmdBlendBuild))
         raise Exception('Failed to un-register command: {0}'.format(kPluginCmdBlendBuild))
 
     try:
         mplugin.deregisterCommand(kPluginCmdBlend)
-    except:
+    except OSError:
         sys.stderr.write('Failed to un-register command: {0}'.format(kPluginCmdBlend))
         raise Exception('Failed to un-register command: {0}'.format(kPluginCmdBlend))
 
     try:
         mplugin.deregisterCommand(kPluginCmdSelectByXml)
-    except:
+    except OSError:
         sys.stderr.write('Failed to un-register command: {0}'.format(kPluginCmdSelectByXml))
         raise Exception('Failed to un-register command: {0}'.format(kPluginCmdSelectByXml))
 
     try:
         mplugin.deregisterCommand(kPluginCmdCopyPose)
-    except:
+    except OSError:
         sys.stderr.write('Failed to un-register command: {0}'.format(kPluginCmdCopyPose))
         raise Exception('Failed to un-register command: {0}'.format(kPluginCmdCopyPose))
 
     try:
         mplugin.deregisterCommand(kPluginCmdPastePose)
-    except:
+    except OSError:
         sys.stderr.write('Failed to un-register command: {0}'.format(kPluginCmdPastePose))
         raise Exception('Failed to un-register command: {0}'.format(kPluginCmdPastePose))
 
     try:
         mplugin.deregisterCommand(kPluginCmdMirrorPose)
-    except:
+    except OSError:
         sys.stderr.write('Failed to un-register command: {0}'.format(kPluginCmdMirrorPose))
         raise Exception('Failed to un-register command: {0}'.format(kPluginCmdMirrorPose))
 
     try:
         mplugin.deregisterCommand(kPluginCmdFlipPose)
-    except:
+    except OSError:
         sys.stderr.write('Failed to un-register command: {0}'.format(kPluginCmdFlipPose))
         raise Exception('Failed to un-register command: {0}'.format(kPluginCmdFlipPose))
 
     try:
         mplugin.deregisterCommand(kPluginCmdMirrorSelect)
-    except:
+    except OSError:
         sys.stderr.write('Failed to un-register command: {0}'.format(kPluginCmdMirrorSelect))
         raise Exception('Failed to un-register command: {0}'.format(kPluginCmdMirrorSelect))
 
     try:
         mplugin.deregisterCommand(kPluginCmdReset)
-    except:
+    except OSError:
         sys.stderr.write('Failed to un-register command: {0}'.format(kPluginCmdReset))
         raise Exception('Failed to un-register command: {0}'.format(kPluginCmdReset))
