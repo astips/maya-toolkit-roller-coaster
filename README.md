@@ -1,11 +1,12 @@
 # maya-toolkit-roller-coaster
-Maya toolkit used to save/load pose and animation-clip.
+Maya toolkit used to save/load pose and motion-clip.
 
 ![Example UI](images/applypose.gif)
 
+
 ### FEATURE
-- Save pose and animation-clip
-- Copy/Paste pose and animation-clip
+- Save pose and motion-clip
+- Copy/Paste pose and motion-clip
 - Mirror/Flip pose
 - MMB drag for fast pose blending
 - Insert, merge and replace animation
@@ -15,14 +16,16 @@ Maya toolkit used to save/load pose and animation-clip.
 - Supports Windows, Linux
 - Supports Maya 2016, 2017 and 2018
 
+
 ### DEPENDENCY
+You need to install the two below dependencies correctly first.
 - **QtSide** https://github.com/astips/QtSide
 - **Mirror Plane** https://github.com/astips/maya-plugin-mirror-plane
 
 
 ### INSTALLATION
 1. Download the latest release and unzip the folder where you want to live.
-2. Copy folder "rollercoaster" to %USERPROFILE%/Documents/maya/scripts
+2. Copy folder "rollercoaster" into %USERPROFILE%/Documents/maya/scripts
 
 
 ### USAGE
