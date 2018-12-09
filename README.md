@@ -26,8 +26,8 @@ Maya toolkit used to save/load pose and animation-clip.
 
 
 ### USAGE
-Tip: You need to value the _**QT_SIDE_BINDING**_ env-var before running the toolkit if you 
-did not set it up when maya launched.
+You need to value the _**QT_SIDE_BINDING**_ env-var before running the toolkit if you 
+didn't set it up when maya launched.
 ```python
 import os
 os.environ['QT_SIDE_BINDING'] = 'pyside'  # Maya2016: pyside, Maya2017+: pyside2
@@ -142,7 +142,7 @@ class FilterContext(FilterBase):
 - **Alt + W**                          _`Hide/Show Right Widget`_
 - **Alt + E**                          _`Hide/Show Middle-Up Widget`_
 - **Alt + R**                          _`Hide/Show Middle Option Widget`_
-- **Alt + (1, 2, 3, 4)**               _`Auto Fit Size of Pose/Clip Items`_
+- **Alt + (1, 2, 3, 4, 5, 6)**         _`Auto Fit Size of Pose/Clip Items`_
 - **Ctrl + Tab**                       _`Switch Official/User Tab`_
 - **Ctrl + C**                         _`Copy Tree Item`_
 - **Ctrl + X**                         _`Cut Tree Item`_
