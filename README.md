@@ -1,7 +1,7 @@
 # maya-toolkit-roller-coaster
 Maya toolkit used to save/load pose and animation-clip.
 
-![Example UI](images/about.png)
+![Example UI](images/applypose.gif)
 
 ### FEATURE
 - Save pose and animation-clip
@@ -165,9 +165,6 @@ class FilterContext(FilterBase):
 
 - **Create Pose**
 ![Example UI](images/createpose.gif)
-
-- **Apply Pose**
-![Example UI](images/applypose.gif)
 
 - **HotKey**
 ![Example UI](images/hotkey.png)
