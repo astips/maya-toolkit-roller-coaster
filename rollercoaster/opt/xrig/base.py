@@ -27,6 +27,13 @@ class XRigBase(object):
     TRANSLATE_ATTR = ['translateX', 'translateY', 'translateZ']
     ROTATE_ATTR = ['rotateX', 'rotateY', 'rotateZ']
 
+    MIRROR_MATRIX = [
+        -1, 0, 0, 0,
+         0, 1, 0, 0,
+         0, 0, 1, 0,
+         0, 0, 0, 1
+    ]
+
     def is_ctrl(self, name):
         state = False
         for tag in self.CTRL_TAG:

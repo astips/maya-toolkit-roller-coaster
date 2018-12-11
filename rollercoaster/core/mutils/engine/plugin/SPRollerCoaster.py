@@ -31,7 +31,7 @@ import maya.OpenMayaAnim as OpenMayaAnim
 from rollercoaster.core.mutils.engine.engine import (
     _travel, _namespace, get_atomic_data, xrig_context
 )
-from rollercoaster.core.mutils import mplane
+from rollercoaster.core.mutils.engine import mplane
 
 
 ########################################################################################
@@ -630,7 +630,7 @@ class SouthParkMirrorPose(OpenMayaMPx.MPxCommand):
 
         datas = get_atomic_data(mode='SELECTED', channel_box=False, context=self._context)
 
-        plane = mplane.getMirrorPlane(namespace)
+        plane = mplane.get_mirror_plane(namespace)
 
         self.results = []
         selectionList = OpenMaya.MSelectionList()
@@ -690,13 +690,11 @@ class SouthParkMirrorPose(OpenMayaMPx.MPxCommand):
             if self._xrig.is_ik_ctrl(switchNodeName.split('|')[-1]):
                 if plane is None:
                     continue
-                result = mplane.magicMirror(src='|'.join(namespace+n for n in nodeName.split('|')), 
-                                            dst='|'.join(namespace+n for n in switchNodeName.split('|')), 
-                                            plane=plane, 
-                                            active=False, 
-                                            space='world', 
-                                            context=self._context
-                                            )
+                result = mplane.magic_mirror(
+                    src='|'.join(namespace+n for n in nodeName.split('|')),
+                    dst='|'.join(namespace+n for n in switchNodeName.split('|')),
+                    plane=plane, active=False, space='world', context=self._context
+                )
                 result[0].setTranslation(result[1], OpenMaya.MSpace.kWorld)
                 result[0].setRotation(result[2], OpenMaya.MSpace.kWorld)
                 self.results.append(result)
@@ -761,7 +759,7 @@ class SouthParkFlipPose(OpenMayaMPx.MPxCommand):
 
         datas = get_atomic_data(mode='SELECTED', channel_box=False, context=self._context)
 
-        plane = mplane.getMirrorPlane(namespace)
+        plane = mplane.get_mirror_plane(namespace)
 
         selectionList = OpenMaya.MSelectionList()
         self.results = []
@@ -872,20 +870,12 @@ class SouthParkFlipPose(OpenMayaMPx.MPxCommand):
                 if plane is None:
                     continue
 
-                this_results = mplane.magicMirror(src=this_name, 
-                                                  dst=that_name, 
-                                                  plane=plane, 
-                                                  active=False, 
-                                                  space='world', 
-                                                  context=self._context
-                                                  )
-                that_results = mplane.magicMirror(src=that_name, 
-                                                  dst=this_name, 
-                                                  plane=plane, 
-                                                  active=False, 
-                                                  space='world', 
-                                                  context=self._context
-                                                  )
+                this_results = mplane.magic_mirror(
+                    src=this_name, dst=that_name, plane=plane, active=False, space='world', context=self._context
+                )
+                that_results = mplane.magic_mirror(
+                    src=that_name, dst=this_name, plane=plane, active=False, space='world', context=self._context
+                )
 
                 this_results[0].setTranslation(this_results[1], OpenMaya.MSpace.kWorld)
                 this_results[0].setRotation(this_results[2], OpenMaya.MSpace.kWorld)

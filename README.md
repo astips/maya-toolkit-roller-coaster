@@ -18,7 +18,7 @@ Maya toolkit used to save/load pose and motion-clip.
 
 
 ### DEPENDENCY
-You need to install the two below dependencies correctly first.
+You need to install these two dependencies correctly first.
 - **QtSide** https://github.com/astips/QtSide
 - **Mirror Plane** https://github.com/astips/maya-plugin-mirror-plane
 
@@ -56,7 +56,7 @@ run_creator('clip')
 from rollercoaster.main import run_context_maker
 run_context_maker()
 ```
-- Enable / Disable Hotkey  > Hotkey: [d + left-mouse]
+- Enable / Disable Hotkey  > Hotkey: **D + LMB**
 ```python
 # enable hotkey
 from rollercoaster.main import enable_hotkey
@@ -120,10 +120,6 @@ class XRigContext(XRigBase):
 
     IK_CTRL_TAG = ['_ik']
     FK_CTRL_TAG = ['_fk']
-
-    IK_FLIP_ATTR = []
-    MD_FLIP_ATTR = []
-    FACE_FLIP_ATTR = []
 ```
 
 - **FILTER Context Option** > rollercoaster/opt/filter
@@ -169,13 +165,14 @@ class FilterContext(FilterBase):
 - **Create Pose**
 ![Example UI](images/createpose.gif)
 
-- **HotKey**
+- **Hot-Key**
 ![Example UI](images/hotkey.png)
 
 
 ### ATTENTION !
 - Login Name: Your workstation's login name should be in english with no space !
-- Undo: Import Animation-Clip can't undo for now !
+- Undo: Import Motion-Clip can't undo for now !
+- Animation Layer: Import/Export Motion-Clip only support default animation layer for now !
 - Community version has full features but quantitative restrictions, such as can only create 2 Shows.
  
  
