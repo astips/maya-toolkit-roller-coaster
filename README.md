@@ -167,6 +167,7 @@ class FilterContext(FilterBase):
 
 - **HotKey & MirrorPlane**
 ![Example UI](images/mirrorplane.gif)
+![Example UI](images/mirrorplane2.gif)
 
 
 ### ATTENTION !
