@@ -68,7 +68,7 @@ def create_menu():
     )
     menu_item_paste_clip = new_menu_item(label='Paste  Clip', parent=menu, sub_menu=True)
     new_menu_item(
-        label='Select', parent=menu_item_paste_clip,
+        label='Selected', parent=menu_item_paste_clip,
         command='from rollercoaster.main import sprc_menu;sprc_menu.paste_animation("SELECTED");'
     )
     new_menu_item(divider=True, parent=menu_item_paste_clip)

@@ -165,8 +165,8 @@ class FilterContext(FilterBase):
 - **Create Pose**
 ![Example UI](images/createpose.gif)
 
-- **Hot-Key**
-![Example UI](images/hotkey.png)
+- **HotKey & MirrorPlane**
+![Example UI](images/mirrorplane.gif)
 
 
 ### ATTENTION !
