@@ -8,6 +8,8 @@ class XRigBase(object):
 
     CTRL_TAG = []
 
+    WEIGHT_CENTER_CTRL_TAG = []
+
     LT_CTRL_TAG = []
     LT_CTRL_FORMAT = []
 
@@ -19,6 +21,8 @@ class XRigBase(object):
 
     IK_CTRL_TAG = []
     FK_CTRL_TAG = []
+    POLE_CTRL_TAG = []
+    POLE_CTRL_FORMAT = []
 
     IK_FLIP_ATTR = []
     MD_FLIP_ATTR = []
@@ -38,6 +42,14 @@ class XRigBase(object):
         state = False
         for tag in self.CTRL_TAG:
             if name.endswith(tag):
+                state = True
+                break
+        return state
+
+    def is_wt_ctrl(self, name):
+        state = False
+        for tag in self.WEIGHT_CENTER_CTRL_TAG:
+            if tag in name:
                 state = True
                 break
         return state
@@ -78,6 +90,14 @@ class XRigBase(object):
         state = False
         for tag in self.FK_CTRL_TAG:
             if tag in name:
+                state = True
+                break
+        return state
+
+    def is_pole_ctrl(self, name):
+        state = False
+        for fmt in self.POLE_CTRL_FORMAT:
+            if fnmatch.fnmatch(name, fmt):
                 state = True
                 break
         return state
@@ -138,6 +158,8 @@ class XRigContext(XRigBase):
     CONTEXT_NAME = '{CONTEXT_NAME}'
 
     CTRL_TAG = [{CTRL_TAG}]
+    
+    WEIGHT_CENTER_CTRL_TAG = [{WEIGHT_CENTER_CTRL_TAG}]
 
     LT_CTRL_TAG = [{LT_CTRL_TAG}]
     LT_CTRL_FORMAT = [{LT_CTRL_FORMAT}]
@@ -150,6 +172,9 @@ class XRigContext(XRigBase):
 
     IK_CTRL_TAG = [{IK_CTRL_TAG}]
     FK_CTRL_TAG = [{FK_CTRL_TAG}]
+    
+    POLE_CTRL_TAG = [{POLE_CTRL_TAG}]
+    POLE_CTRL_FORMAT = [{POLE_CTRL_FORMAT}]
 
     IK_FLIP_ATTR = [{IK_FLIP_ATTR}]
     MD_FLIP_ATTR = [{MD_FLIP_ATTR}]

@@ -20,10 +20,11 @@ class SmartPanel(object):
 
     def __init__(self, panels):
 
-        self.v_types = ['nc', 'ns', 'pm', 'sds', 'pl', 'lt', 'ca', 'j', 'ikh', 'df', 
-                        'dy', 'fl', 'hs', 'fo', 'ncl', 'npa', 'nr', 'dc', 'lc', 'dim', 
-                        'pv', 'ha', 'tx', 'str', 'motionTrails', 'm', 'clipGhosts', 
-                        'cv', 'hu', 'gr', 'hud', 'imp', 'sel', 'ps']
+        self.v_types = [
+            'nc', 'ns', 'pm', 'pl', 'lt', 'ca', 'j', 'df', 'dy', 'fl', 'sds', 'ikh',
+            'hs', 'fo', 'ncl', 'npa', 'nr', 'dc', 'lc', 'dim', 'pv', 'ha', 'tx', 'str',
+            'motionTrails', 'm', 'clipGhosts', 'cv', 'hu', 'gr', 'hud', 'imp', 'sel', 'ps'
+        ]
 
         self.p_dict = {}
         self.panels = panels

@@ -2,22 +2,22 @@
 
 ###########################################################################################
 #
-# Description: South Park Roller Coaster Toolkit - Pose & Clip Data Cmd Plugin
+# Description: South Park Roller Coaster Toolkit - Pose & Clip Cmd Plugin
 #
 #              Used to paste pose & animation data, blend pose with a percent
 #              parse a xml data file, select contains in scene depend on data file,
 #              copy pose & paste pose
 #
 #              Cmd:
-#                   SPBlendBuild
-#                   SPBlend
-#                   SPSelectControl
-#                   SPCopyPose
-#                   SPPastePose
-#                   SPMirrorPose
-#                   SPFlipPose
-#                   SPMirrorSelect
-#                   SPResetControl
+#                   SPRCBlendBuild
+#                   SPRCBlend
+#                   SPRCSelectControl
+#                   SPRCCopyPose
+#                   SPRCPastePose
+#                   SPRCMirrorPose
+#                   SPRCFlipPose
+#                   SPRCMirrorSelect
+#                   SPRCResetControl
 #
 ###########################################################################################
 import sys
@@ -28,19 +28,21 @@ import maya.OpenMaya as OpenMaya
 import maya.OpenMayaMPx as OpenMayaMPx
 import maya.OpenMayaAnim as OpenMayaAnim
 
+from rollercoaster.core.const import (
+    TRAVEL_MODE, POSE_APPLY_MODE, POSE_APPLY_MODIFY
+)
+from rollercoaster.core.mutils.engine import mplane
 from rollercoaster.core.mutils.engine.engine import (
     _travel, _namespace, get_atomic_data, xrig_context
 )
-from rollercoaster.core.mutils.engine import mplane
-
 
 ########################################################################################
 #
 #      SPRCPlugin - Global Vars
 #
 ########################################################################################
-ANIMLIBRARY_POSE_MULTI_DYN_DATA = {}
-ANIMLIBRARY_POSE_CACHE_DATA = {}
+SPRC_POSE_MULTI_DYN_DATA = {}
+SPRC_POSE_CACHE_DATA = {}
 
 
 ########################################################################################
@@ -48,40 +50,40 @@ ANIMLIBRARY_POSE_CACHE_DATA = {}
 #      SPRCPlugin - Common Flags
 #
 ########################################################################################
-kAnimLibraryFlagTravelMode = '-m'
-kAnimLibraryLongFlagTravelMode = '-mode'
+SPRC_TravelModeFlag = '-m'
+SPRC_TravelModeFlagLong = '-mode'
 
-kAnimLibraryFlagChannelBox = '-c'
-kAnimLibraryLongFlagChannelBox = '-channelBox'
+SPRC_ChannelBoxFlag = '-c'
+SPRC_ChannelBoxFlagLong = '-channelBox'
 
-kAnimLibraryFlagXmlFile = '-f'
-kAnimLibraryLongFlagXmlFile = '-file'
+SPRC_FlagDataFile = '-f'
+SPRC_DataFileFlagLong = '-file'
 
-kAnimLibraryFlagNamespace = '-n'
-kAnimLibraryLongFlagNamespace = '-namespace'
+SPRC_NamespaceFlag = '-n'
+SPRC_NamespaceFlagLong = '-namespace'
 
-kAnimLibraryFlagApplyMode = '-a'
-kAnimLibraryLongFlagApplyMode = '-applyMode'
+SPRC_ApplyModeFlag = '-a'
+SPRC_ApplyModeFlagLong = '-applyMode'
 
-kAnimLibraryFlagModify = '-i'
-kAnimLibraryLongFlagModify = '-modify'
+SPRC_ModifyFlag = '-i'
+SPRC_ModifyFlagLong = '-modify'
 
-kAnimLibraryFlagKeep = '-k'
-kAnimLibraryLongFlagKeep = '-keep'
+SPRC_KeepFlag = '-k'
+SPRC_KeepFlagLong = '-keep'
 
-kAnimLibraryFlagHelp = '-h'
-kAnimLibraryLongFlagHelp = '-help'
+SPRC_HelpFlag = '-h'
+SPRC_HelpFlagLong = '-help'
 
-kAnimLibraryFlagXrig = '-x'
-kAnimLibraryLongFlagXrig = '-xrig'
+SPRC_XRIGFlag = '-x'
+SPRC_XRIGFlagLong = '-xrig'
 
 
 ########################################################################################
 #
-#      SPBlendBuild Cmd
+#      SPRCBlendBuild Cmd
 #
 ########################################################################################
-kPluginCmdBlendBuild = 'SPBlendBuild'
+kPluginCmdBlendBuild = 'SPRCBlendBuild'
 
 
 class SouthParkBlendBuild(OpenMayaMPx.MPxCommand):
@@ -92,75 +94,75 @@ class SouthParkBlendBuild(OpenMayaMPx.MPxCommand):
         OpenMayaMPx.MPxCommand.__init__(self)
 
     def parseArgs(self, kArguments):
-        argData = OpenMaya.MArgParser(self.syntax(), kArguments)
-        if argData.isFlagSet(kAnimLibraryFlagTravelMode):
-            self.travel_mode = argData.flagArgumentString(kAnimLibraryFlagTravelMode, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagTravelMode):
-            self.travel_mode = argData.flagArgumentString(kAnimLibraryLongFlagTravelMode, 0)
+        arg_data = OpenMaya.MArgParser(self.syntax(), kArguments)
+        if arg_data.isFlagSet(SPRC_TravelModeFlag):
+            self.travel_mode = arg_data.flagArgumentString(SPRC_TravelModeFlag, 0)
+        elif arg_data.isFlagSet(SPRC_TravelModeFlagLong):
+            self.travel_mode = arg_data.flagArgumentString(SPRC_TravelModeFlagLong, 0)
         else:
-            self.travel_mode = 'SELECTED'
+            self.travel_mode = TRAVEL_MODE.selected
 
-        if argData.isFlagSet(kAnimLibraryFlagChannelBox):
-            self._channel = argData.flagArgumentBool(kAnimLibraryFlagChannelBox, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagChannelBox):
-            self._channel = argData.flagArgumentBool(kAnimLibraryLongFlagChannelBox, 0)
+        if arg_data.isFlagSet(SPRC_ChannelBoxFlag):
+            self._channel = arg_data.flagArgumentBool(SPRC_ChannelBoxFlag, 0)
+        elif arg_data.isFlagSet(SPRC_ChannelBoxFlagLong):
+            self._channel = arg_data.flagArgumentBool(SPRC_ChannelBoxFlagLong, 0)
         else:
             self._channel = False
 
-        if argData.isFlagSet(kAnimLibraryFlagXmlFile):
-            self._file = argData.flagArgumentString(kAnimLibraryFlagXmlFile, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagXmlFile):
-            self._file = argData.flagArgumentString(kAnimLibraryLongFlagXmlFile, 0)
+        if arg_data.isFlagSet(SPRC_FlagDataFile):
+            self._file = arg_data.flagArgumentString(SPRC_FlagDataFile, 0)
+        elif arg_data.isFlagSet(SPRC_DataFileFlagLong):
+            self._file = arg_data.flagArgumentString(SPRC_DataFileFlagLong, 0)
         else:
             raise Exception('-f (-file) flag needed.')
 
-        if argData.isFlagSet(kAnimLibraryFlagNamespace):
-            self._namespace = argData.flagArgumentString(kAnimLibraryFlagNamespace, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagNamespace):
-            self._namespace = argData.flagArgumentString(kAnimLibraryLongFlagNamespace, 0)
+        if arg_data.isFlagSet(SPRC_NamespaceFlag):
+            self._namespace = arg_data.flagArgumentString(SPRC_NamespaceFlag, 0)
+        elif arg_data.isFlagSet(SPRC_NamespaceFlagLong):
+            self._namespace = arg_data.flagArgumentString(SPRC_NamespaceFlagLong, 0)
         else:
             self._namespace = None
 
-        if argData.isFlagSet(kAnimLibraryFlagApplyMode):
-            self.apply_mode = argData.flagArgumentString(kAnimLibraryFlagApplyMode, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagApplyMode):
-            self.apply_mode = argData.flagArgumentString(kAnimLibraryLongFlagApplyMode, 0)
+        if arg_data.isFlagSet(SPRC_ApplyModeFlag):
+            self.apply_mode = arg_data.flagArgumentString(SPRC_ApplyModeFlag, 0)
+        elif arg_data.isFlagSet(SPRC_ApplyModeFlagLong):
+            self.apply_mode = arg_data.flagArgumentString(SPRC_ApplyModeFlagLong, 0)
         else:
-            self.apply_mode = 'BLEND'
+            self.apply_mode = POSE_APPLY_MODE.blend
 
-        if argData.isFlagSet(kAnimLibraryFlagModify):
-            self._modify = argData.flagArgumentString(kAnimLibraryFlagModify, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagModify):
-            self._modify = argData.flagArgumentString(kAnimLibraryLongFlagModify, 0)
+        if arg_data.isFlagSet(SPRC_ModifyFlag):
+            self._modify = arg_data.flagArgumentString(SPRC_ModifyFlag, 0)
+        elif arg_data.isFlagSet(SPRC_ModifyFlagLong):
+            self._modify = arg_data.flagArgumentString(SPRC_ModifyFlagLong, 0)
         else:
             self._modify = None
 
-        if argData.isFlagSet(kAnimLibraryFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryFlagXrig, 0)
+        if arg_data.isFlagSet(SPRC_XRIGFlag):
+            self._context = arg_data.flagArgumentString(SPRC_XRIGFlag, 0)
             self._xrig = xrig_context(self._context)
-        elif argData.isFlagSet(kAnimLibraryLongFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryLongFlagXrig, 0)
+        elif arg_data.isFlagSet(SPRC_XRIGFlagLong):
+            self._context = arg_data.flagArgumentString(SPRC_XRIGFlagLong, 0)
             self._xrig = xrig_context(self._context)
         else:
             raise Exception('-x (-xrig) flag needed.')
 
     def parse(self):
-        datas = {}
-        xmlTree = et.parse(self._file)
-        dataElement = xmlTree.getroot().find('Data')
-        for nodeElement in dataElement.getiterator('Node'):
-            attrDict = {}
-            nodeName = nodeElement.attrib['name']
-            for attrElement in nodeElement.getiterator('Attr'):
-                attrName = attrElement.attrib['name']
-                attrDict[attrName] = {}
+        data = {}
+        tree = et.parse(self._file)
+        data_element = tree.getroot().find('Data')
+        for nodeElement in data_element.getiterator('Node'):
+            attr_dict = {}
+            node_name = nodeElement.attrib['name']
+            for attr_element in nodeElement.getiterator('Attr'):
+                attr_name = attr_element.attrib['name']
+                attr_dict[attr_name] = {}
                 values = []
-                for keyElement in attrElement.getiterator('Key'):
+                for keyElement in attr_element.getiterator('Key'):
                     value = json.loads(keyElement.attrib['value'])
                     values.append(value)
-                attrDict[attrName]['value'] = values
-            datas[nodeName] = attrDict
-        return datas
+                attr_dict[attr_name]['value'] = values
+            data[node_name] = attr_dict
+        return data
 
     def doIt(self, kArguments):
         self.redoIt(kArguments)
@@ -168,114 +170,106 @@ class SouthParkBlendBuild(OpenMayaMPx.MPxCommand):
     def redoIt(self, kArguments):
         self.parseArgs(kArguments)
 
-        global ANIMLIBRARY_POSE_MULTI_DYN_DATA
-        ANIMLIBRARY_POSE_MULTI_DYN_DATA = {}
+        global SPRC_POSE_MULTI_DYN_DATA
+        SPRC_POSE_MULTI_DYN_DATA = {}
 
         if self._namespace is None:
             self._namespace = _namespace()
             if self._namespace is None:
-                # return
                 raise Exception('Select Objects.')
 
-        sceneDatas = get_atomic_data(mode=self.travel_mode, channel_box=self._channel, context=self._context)
-        # print ('SCENE DATA', sceneDatas)
-        xmlDatas = self.parse()
-        # print ('XML DATA', xmlDatas)
+        scene_data = get_atomic_data(mode=self.travel_mode, channel_box=self._channel, context=self._context)
+        # print ('SCENE DATA', scene_data)
+        xml_data = self.parse()
+        # print ('XML DATA', xml_data)
 
-        selectionList = OpenMaya.MSelectionList()
+        selection_list = OpenMaya.MSelectionList()
+        xml_nodes = xml_data.keys()
+        for node_name, attr_dict in scene_data.iteritems():
+            if self._modify == POSE_APPLY_MODIFY.normal:
+                switch_name = node_name
 
-        xmlNodes = xmlDatas.keys()
-        for nodeName, attrsDict in sceneDatas.iteritems():
-            if self._modify == 'NORMAL':
-                switchNodeName = nodeName
-
-            elif self._modify == 'L':
-                if not self._xrig.is_lt_ctrl(nodeName.split('|')[-1]):
+            elif self._modify == POSE_APPLY_MODIFY.filter_l:
+                if not self._xrig.is_lt_ctrl(node_name.split('|')[-1]):
                     continue
-                switchNodeName = nodeName
+                switch_name = node_name
 
-            elif self._modify == 'R':
-                if not self._xrig.is_rt_ctrl(nodeName.split('|')[-1]):
+            elif self._modify == POSE_APPLY_MODIFY.filter_r:
+                if not self._xrig.is_rt_ctrl(node_name.split('|')[-1]):
                     continue
-                switchNodeName = nodeName
+                switch_name = node_name
 
-            elif self._modify == 'ML':
-                if self._xrig.is_rt_ctrl(nodeName.split('|')[-1]):
-                    switchNodeName = self._xrig.rt_to_lt(nodeName)
+            elif self._modify == POSE_APPLY_MODIFY.mirror_l:
+                if self._xrig.is_rt_ctrl(node_name.split('|')[-1]):
+                    switch_name = self._xrig.rt_to_lt(node_name)
                 else:
-                    switchNodeName = nodeName
+                    switch_name = node_name
 
-            elif self._modify == 'MR':
-                if self._xrig.is_lt_ctrl(nodeName.split('|')[-1]):
-                    switchNodeName = self._xrig.lt_to_rt(nodeName)
+            elif self._modify == POSE_APPLY_MODIFY.mirror_r:
+                if self._xrig.is_lt_ctrl(node_name.split('|')[-1]):
+                    switch_name = self._xrig.lt_to_rt(node_name)
                 else:
-                    switchNodeName = nodeName
+                    switch_name = node_name
 
-            elif self._modify == 'FLIP':
-                switchNodeName = self._xrig.switch(nodeName)
+            elif self._modify == POSE_APPLY_MODIFY.flip:
+                switch_name = self._xrig.switch(node_name)
 
             else:
                 raise Exception('Invalid Argument.')
 
-            if switchNodeName not in xmlNodes:
+            if switch_name not in xml_nodes:
                 continue
 
-            _name = '|'.join(self._namespace+n for n in nodeName.split('|'))
+            _name = '|'.join(self._namespace+n for n in node_name.split('|'))
             try:
-                selectionList.add(_name)
+                selection_list.add(_name)
             except:
                 continue
-            mObj = OpenMaya.MObject()
-            selectionList.getDependNode(0, mObj)
-            dagNodeFn = OpenMaya.MFnDagNode(mObj)
-            selectionList.clear()
+            obj = OpenMaya.MObject()
+            selection_list.getDependNode(0, obj)
+            dag_node_fn = OpenMaya.MFnDagNode(obj)
+            selection_list.clear()
 
-            _attrs = xmlDatas[switchNodeName].keys()
-            for attrName, value in attrsDict.iteritems():
-                if not attrName in _attrs:
+            _attrs = xml_data[switch_name].keys()
+            for attr_name, value in attr_dict.iteritems():
+                if attr_name not in _attrs:
                     continue
-
-                plug = dagNodeFn.findPlug(attrName)
-
+                plug = dag_node_fn.findPlug(attr_name)
                 if not plug.isKeyable():
                     continue
-
                 if plug.isLocked():
                     continue
-
                 if not plug.isFreeToChange(False, False) == OpenMaya.MPlug.kFreeToChange:
                     continue
 
-                sceneValue = value
-                xmlValue = xmlDatas[switchNodeName][attrName]['value'][0][1]
-                # print switchNodeName, nodeName
-                if not switchNodeName == nodeName:
-                    if self._xrig.is_ik_ctrl(switchNodeName.split('|')[-1]):
-                        if self._xrig.is_ik_flip_attr(attrName):
-                            xmlValue *= -1
-
-                    elif self._xrig.is_fk_ctrl(switchNodeName.split('|')[-1]):
-                        if self._xrig.is_translate_attr(attrName):
-                            xmlValue *= -1
-
+                scene_value = value
+                xml_value = xml_data[switch_name][attr_name]['value'][0][1]
+                # print switch_name, node_name
+                if not switch_name == node_name:
+                    if self._xrig.is_ik_ctrl(switch_name.split('|')[-1]):
+                        if self._xrig.is_ik_flip_attr(attr_name):
+                            xml_value *= -1
+                    elif self._xrig.is_fk_ctrl(switch_name.split('|')[-1]):
+                        if self._xrig.is_translate_attr(attr_name):
+                            xml_value *= -1
                     else:
-                        if self._xrig.is_facial_flip_attr(attrName):
-                            xmlValue *= -1
+                        if self._xrig.is_facial_flip_attr(attr_name):
+                            xml_value *= -1
 
                 else:
                     if self._modify == 'FLIP':
-                        if self._xrig.is_md_ctrl(switchNodeName.split('|')[-1]):
-                            if self._xrig.is_md_flip_attr(attrName):
-                                xmlValue *= -1
+                        if self._xrig.is_md_ctrl(switch_name.split('|')[-1]):
+                            if self._xrig.is_md_flip_attr(attr_name):
+                                xml_value *= -1
 
-                if self.apply_mode == 'BLEND':
-                    if round(xmlValue, self.PRECISION) != round(sceneValue, self.PRECISION):
-                        dynValue = (float(xmlValue) - float(sceneValue)) / 100
-                        ANIMLIBRARY_POSE_MULTI_DYN_DATA[plug] = [sceneValue, xmlValue, dynValue]
+                if self.apply_mode == POSE_APPLY_MODE.blend:
+                    if round(xml_value, self.PRECISION) != round(scene_value, self.PRECISION):
+                        dyn_value = (float(xml_value) - float(scene_value)) / 100
+                        SPRC_POSE_MULTI_DYN_DATA[plug] = [scene_value, xml_value, dyn_value]
 
-                elif self.apply_mode == 'MULTIPLIER':
-                    dynValue = float(xmlValue) / 100
-                    ANIMLIBRARY_POSE_MULTI_DYN_DATA[plug] = [sceneValue, xmlValue, dynValue]
+                elif self.apply_mode == POSE_APPLY_MODE.multiplier:
+                    dyn_value = float(xml_value) / 100
+                    SPRC_POSE_MULTI_DYN_DATA[plug] = [scene_value, xml_value, dyn_value]
                     
                 else:
                     raise Exception('Invalid Mode(\n1.BLEND \n2.MULTIPLIER).')
@@ -290,23 +284,23 @@ def blendBuildCmdCreator():
 
 def blendBuildSyntaxCreator():
     syntax = OpenMaya.MSyntax()
-    syntax.addFlag(kAnimLibraryFlagTravelMode, kAnimLibraryLongFlagTravelMode, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagChannelBox, kAnimLibraryLongFlagChannelBox, OpenMaya.MSyntax.kBoolean)
-    syntax.addFlag(kAnimLibraryFlagXmlFile, kAnimLibraryLongFlagXmlFile, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagNamespace, kAnimLibraryLongFlagNamespace, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagApplyMode, kAnimLibraryLongFlagApplyMode, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagModify, kAnimLibraryLongFlagModify, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagHelp, kAnimLibraryLongFlagHelp, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagXrig, kAnimLibraryLongFlagXrig, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_TravelModeFlag, SPRC_TravelModeFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_ChannelBoxFlag, SPRC_ChannelBoxFlagLong, OpenMaya.MSyntax.kBoolean)
+    syntax.addFlag(SPRC_FlagDataFile, SPRC_DataFileFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_NamespaceFlag, SPRC_NamespaceFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_ApplyModeFlag, SPRC_ApplyModeFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_ModifyFlag, SPRC_ModifyFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_HelpFlag, SPRC_HelpFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_XRIGFlag, SPRC_XRIGFlagLong, OpenMaya.MSyntax.kString)
     return syntax
 
 
 ########################################################################################
 #
-#        SPBlend Cmd
+#        SPRCBlend Cmd
 #
 ########################################################################################
-kPluginCmdBlend = 'SPBlend'
+kPluginCmdBlend = 'SPRCBlend'
 
 
 class SouthParkBlend(OpenMayaMPx.MPxCommand):
@@ -316,15 +310,14 @@ class SouthParkBlend(OpenMayaMPx.MPxCommand):
         self.modifier = OpenMaya.MDGModifier()
 
     def parseArgs(self, kArguments):
-        argData = OpenMaya.MArgParser(self.syntax(), kArguments)
-        self.percent = argData.commandArgumentInt(0)
+        arg_data = OpenMaya.MArgParser(self.syntax(), kArguments)
+        self.percent = arg_data.commandArgumentInt(0)
 
     def doIt(self, kArguments):
         self.parseArgs(kArguments)
-        for plug, valueList in ANIMLIBRARY_POSE_MULTI_DYN_DATA.iteritems():
-            v = valueList[0] + valueList[2] * self.percent
+        for plug, value_list in SPRC_POSE_MULTI_DYN_DATA.iteritems():
+            v = value_list[0] + value_list[2] * self.percent
             self.modifier.newPlugValueFloat(plug, v)
-
         self.modifier.doIt()
 
     def redoIt(self):
@@ -349,10 +342,10 @@ def blendSyntaxCreator():
 
 ########################################################################################
 #
-#        SPSelectControl Cmd
+#        SPRCSelectControl Cmd
 #
 ########################################################################################
-kPluginCmdSelectByXml = 'SPSelectControl'
+kPluginCmdSelectByXml = 'SPRCSelectControl'
 
 
 class SouthParkSelectControl(OpenMayaMPx.MPxCommand):
@@ -363,18 +356,18 @@ class SouthParkSelectControl(OpenMayaMPx.MPxCommand):
         OpenMaya.MGlobal.getActiveSelectionList(self.bufferSelectionList)
         
     def parseArgs(self, kArguments):
-        argData = OpenMaya.MArgParser(self.syntax(), kArguments)
-        if argData.isFlagSet(kAnimLibraryFlagXmlFile):
-            self.file = argData.flagArgumentString(kAnimLibraryFlagXmlFile, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagXmlFile):
-            self.file = argData.flagArgumentString(kAnimLibraryLongFlagXmlFile, 0)
+        arg_data = OpenMaya.MArgParser(self.syntax(), kArguments)
+        if arg_data.isFlagSet(SPRC_FlagDataFile):
+            self.file = arg_data.flagArgumentString(SPRC_FlagDataFile, 0)
+        elif arg_data.isFlagSet(SPRC_DataFileFlagLong):
+            self.file = arg_data.flagArgumentString(SPRC_DataFileFlagLong, 0)
         else:
             raise Exception('-f (-file) flag needed.')
 
-        if argData.isFlagSet(kAnimLibraryFlagNamespace):
-            self.namespace = argData.flagArgumentString(kAnimLibraryFlagNamespace, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagNamespace):
-            self.namespace = argData.flagArgumentString(kAnimLibraryLongFlagNamespace, 0)
+        if arg_data.isFlagSet(SPRC_NamespaceFlag):
+            self.namespace = arg_data.flagArgumentString(SPRC_NamespaceFlag, 0)
+        elif arg_data.isFlagSet(SPRC_NamespaceFlagLong):
+            self.namespace = arg_data.flagArgumentString(SPRC_NamespaceFlagLong, 0)
         else:
             self.namespace = None
 
@@ -389,19 +382,17 @@ class SouthParkSelectControl(OpenMayaMPx.MPxCommand):
             if self.namespace is None:
                 raise Exception('Select Objects.')
 
-        xmlTree = et.parse(self.file)
-        dataElement = xmlTree.getroot().find('Data')
-
-        selectionList = OpenMaya.MSelectionList()
-        for nodeElement in dataElement.getiterator('Node'):
-            nodeName = nodeElement.attrib['name']
-            _name = '|'.join(self.namespace+n for n in nodeName.split('|'))
+        tree = et.parse(self.file)
+        data_element = tree.getroot().find('Data')
+        selection_list = OpenMaya.MSelectionList()
+        for node_element in data_element.getiterator('Node'):
+            node_name = node_element.attrib['name']
+            _name = '|'.join(self.namespace+n for n in node_name.split('|'))
             try:
-                selectionList.add(_name)
+                selection_list.add(_name)
             except:
                 continue
-
-        OpenMaya.MGlobal.setActiveSelectionList(selectionList)
+        OpenMaya.MGlobal.setActiveSelectionList(selection_list)
 
     def undoIt(self):
         OpenMaya.MGlobal.setActiveSelectionList(self.bufferSelectionList)
@@ -416,17 +407,17 @@ def selectByXmlCmdCreator():
 
 def selectByXmlSyntaxCreator():
     syntax = OpenMaya.MSyntax()
-    syntax.addFlag(kAnimLibraryFlagXmlFile, kAnimLibraryLongFlagXmlFile, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagNamespace, kAnimLibraryLongFlagNamespace, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_FlagDataFile, SPRC_DataFileFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_NamespaceFlag, SPRC_NamespaceFlagLong, OpenMaya.MSyntax.kString)
     return syntax
 
 
 ########################################################################################
 #
-#        SPCopyPose Cmd
+#        SPRCCopyPose Cmd
 #
 ########################################################################################
-kPluginCmdCopyPose = 'SPCopyPose'
+kPluginCmdCopyPose = 'SPRCCopyPose'
 
 
 class SouthParkCopyPose(OpenMayaMPx.MPxCommand):
@@ -435,25 +426,25 @@ class SouthParkCopyPose(OpenMayaMPx.MPxCommand):
         OpenMayaMPx.MPxCommand.__init__(self)
 
     def parseArgs(self, kArguments):
-        argData = OpenMaya.MArgParser(self.syntax(), kArguments)
-        if argData.isFlagSet(kAnimLibraryFlagTravelMode):
-            self.travel_mode = argData.flagArgumentString(kAnimLibraryFlagTravelMode, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagTravelMode):
-            self.travel_mode = argData.flagArgumentString(kAnimLibraryLongFlagTravelMode, 0)
+        arg_data = OpenMaya.MArgParser(self.syntax(), kArguments)
+        if arg_data.isFlagSet(SPRC_TravelModeFlag):
+            self.travel_mode = arg_data.flagArgumentString(SPRC_TravelModeFlag, 0)
+        elif arg_data.isFlagSet(SPRC_TravelModeFlagLong):
+            self.travel_mode = arg_data.flagArgumentString(SPRC_TravelModeFlagLong, 0)
         else:
             raise Exception('-m (-mode) flag needed.')
 
-        if argData.isFlagSet(kAnimLibraryFlagChannelBox):
-            self.channelBox = argData.flagArgumentBool(kAnimLibraryFlagChannelBox, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagChannelBox):
-            self.channelBox = argData.flagArgumentBool(kAnimLibraryLongFlagChannelBox, 0)
+        if arg_data.isFlagSet(SPRC_ChannelBoxFlag):
+            self.channelBox = arg_data.flagArgumentBool(SPRC_ChannelBoxFlag, 0)
+        elif arg_data.isFlagSet(SPRC_ChannelBoxFlagLong):
+            self.channelBox = arg_data.flagArgumentBool(SPRC_ChannelBoxFlagLong, 0)
         else:
             self.channelBox = False
 
-        if argData.isFlagSet(kAnimLibraryFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryFlagXrig, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryLongFlagXrig, 0)
+        if arg_data.isFlagSet(SPRC_XRIGFlag):
+            self._context = arg_data.flagArgumentString(SPRC_XRIGFlag, 0)
+        elif arg_data.isFlagSet(SPRC_XRIGFlagLong):
+            self._context = arg_data.flagArgumentString(SPRC_XRIGFlagLong, 0)
         else:
             raise Exception('-x (-xrig) flag needed.')
 
@@ -462,11 +453,11 @@ class SouthParkCopyPose(OpenMayaMPx.MPxCommand):
 
     def redoIt(self, kArguments):
         self.parseArgs(kArguments)
-        global ANIMLIBRARY_POSE_CACHE_DATA
-        ANIMLIBRARY_POSE_CACHE_DATA = get_atomic_data(
+        global SPRC_POSE_CACHE_DATA
+        SPRC_POSE_CACHE_DATA = get_atomic_data(
             mode=self.travel_mode, channel_box=self.channelBox, context=self._context
         )
-        # print ANIMLIBRARY_POSE_CACHE_DATA
+        # print SPRC_POSE_CACHE_DATA
 
     def isUndoable(self):
         return False
@@ -478,18 +469,18 @@ def copyPoseCmdCreator():
 
 def copyPoseSyntaxCreator():
     syntax = OpenMaya.MSyntax()
-    syntax.addFlag(kAnimLibraryFlagTravelMode, kAnimLibraryLongFlagTravelMode, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagChannelBox, kAnimLibraryLongFlagChannelBox, OpenMaya.MSyntax.kBoolean)
-    syntax.addFlag(kAnimLibraryFlagXrig, kAnimLibraryLongFlagXrig, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_TravelModeFlag, SPRC_TravelModeFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_ChannelBoxFlag, SPRC_ChannelBoxFlagLong, OpenMaya.MSyntax.kBoolean)
+    syntax.addFlag(SPRC_XRIGFlag, SPRC_XRIGFlagLong, OpenMaya.MSyntax.kString)
     return syntax
 
 
 ########################################################################################
 #
-#        SPPastePose Cmd
+#        SPRCPastePose Cmd
 #
 ########################################################################################
-kPluginCmdPastePose = 'SPPastePose'
+kPluginCmdPastePose = 'SPRCPastePose'
 
 
 class SouthParkPastePose(OpenMayaMPx.MPxCommand):
@@ -499,26 +490,26 @@ class SouthParkPastePose(OpenMayaMPx.MPxCommand):
         self.modifier = OpenMaya.MDGModifier()
 
     def parseArgs(self, kArguments):
-        argData = OpenMaya.MArgParser(self.syntax(), kArguments)
+        arg_Data = OpenMaya.MArgParser(self.syntax(), kArguments)
 
-        if argData.isFlagSet(kAnimLibraryFlagTravelMode):
-            self.travel_mode = argData.flagArgumentString(kAnimLibraryFlagTravelMode, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagTravelMode):
-            self.travel_mode = argData.flagArgumentString(kAnimLibraryLongFlagTravelMode, 0)
+        if arg_Data.isFlagSet(SPRC_TravelModeFlag):
+            self.travel_mode = arg_Data.flagArgumentString(SPRC_TravelModeFlag, 0)
+        elif arg_Data.isFlagSet(SPRC_TravelModeFlagLong):
+            self.travel_mode = arg_Data.flagArgumentString(SPRC_TravelModeFlagLong, 0)
         else:
             raise Exception('-m (-mode) flag needed.')
 
-        if argData.isFlagSet(kAnimLibraryFlagNamespace):
-            self.namespace = argData.flagArgumentString(kAnimLibraryFlagNamespace, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagNamespace):
-            self.namespace = argData.flagArgumentString(kAnimLibraryLongFlagNamespace, 0)
+        if arg_Data.isFlagSet(SPRC_NamespaceFlag):
+            self.namespace = arg_Data.flagArgumentString(SPRC_NamespaceFlag, 0)
+        elif arg_Data.isFlagSet(SPRC_NamespaceFlagLong):
+            self.namespace = arg_Data.flagArgumentString(SPRC_NamespaceFlagLong, 0)
         else:
             self.namespace = None
 
-        if argData.isFlagSet(kAnimLibraryFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryFlagXrig, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryLongFlagXrig, 0)
+        if arg_Data.isFlagSet(SPRC_XRIGFlag):
+            self._context = arg_Data.flagArgumentString(SPRC_XRIGFlag, 0)
+        elif arg_Data.isFlagSet(SPRC_XRIGFlagLong):
+            self._context = arg_Data.flagArgumentString(SPRC_XRIGFlagLong, 0)
         else:
             self._context = None
 
@@ -533,41 +524,34 @@ class SouthParkPastePose(OpenMayaMPx.MPxCommand):
             if self.namespace is None:
                 raise Exception('Select Objects.')
 
-        global ANIMLIBRARY_POSE_CACHE_DATA
+        global SPRC_POSE_CACHE_DATA
         nodes = []
         _nodes = _travel(mode=self.travel_mode, context=self._context) or []
         for _node in _nodes:
             tokens = OpenMaya.MFnDagNode(_node).partialPathName().split('|')
             nodes.append('|'.join([token.split(':')[-1] for token in tokens]))
 
-        selectionList = OpenMaya.MSelectionList()
-        for nodeName, attrsDict in ANIMLIBRARY_POSE_CACHE_DATA.iteritems():
-            if not nodeName in nodes:
+        selection_list = OpenMaya.MSelectionList()
+        for node_name, attr_dict in SPRC_POSE_CACHE_DATA.iteritems():
+            if node_name not in nodes:
                 continue
+            _name = '|'.join(self.namespace+n for n in node_name.split('|'))
+            selection_list.add(_name)
+            obj = OpenMaya.MObject()
+            selection_list.getDependNode(0, obj)
+            dag_node_fn = OpenMaya.MFnDagNode(obj)
+            selection_list.clear()
 
-            _name = '|'.join(self.namespace+n for n in nodeName.split('|'))
-            selectionList.add(_name)
-
-            mObj = OpenMaya.MObject()
-            selectionList.getDependNode(0, mObj)
-            dagNodeFn = OpenMaya.MFnDagNode(mObj)
-
-            selectionList.clear()
-
-            for attrName, value in attrsDict.iteritems():
-                plug = dagNodeFn.findPlug(attrName)
+            for attrName, value in attr_dict.iteritems():
+                plug = dag_node_fn.findPlug(attrName)
                 if plug.isNull():
                     continue
-
                 if not plug.isKeyable():
                     continue
-
                 if plug.isLocked():
                     continue
-
                 if not plug.isFreeToChange(False, False) == OpenMaya.MPlug.kFreeToChange:
                     continue
-
                 self.modifier.newPlugValueFloat(plug, value)
 
         self.modifier.doIt()
@@ -585,18 +569,18 @@ def pastePoseCmdCreator():
 
 def pastePoseSyntaxCreator():
     syntax = OpenMaya.MSyntax()
-    syntax.addFlag(kAnimLibraryFlagTravelMode, kAnimLibraryLongFlagTravelMode, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagNamespace, kAnimLibraryLongFlagNamespace, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagXrig, kAnimLibraryLongFlagXrig, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_TravelModeFlag, SPRC_TravelModeFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_NamespaceFlag, SPRC_NamespaceFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_XRIGFlag, SPRC_XRIGFlagLong, OpenMaya.MSyntax.kString)
     return syntax
 
 
 ########################################################################################
 #
-#        SPMirrorPose Cmd
+#        SPRCMirrorPose Cmd
 #
 ########################################################################################
-kPluginCmdMirrorPose = 'SPMirrorPose'
+kPluginCmdMirrorPose = 'SPRCMirrorPose'
 
 
 class SouthParkMirrorPose(OpenMayaMPx.MPxCommand):
@@ -607,13 +591,13 @@ class SouthParkMirrorPose(OpenMayaMPx.MPxCommand):
         self.results = None
 
     def parseArgs(self, kArguments):
-        argData = OpenMaya.MArgParser(self.syntax(), kArguments)
+        arg_data = OpenMaya.MArgParser(self.syntax(), kArguments)
 
-        if argData.isFlagSet(kAnimLibraryFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryFlagXrig, 0)
+        if arg_data.isFlagSet(SPRC_XRIGFlag):
+            self._context = arg_data.flagArgumentString(SPRC_XRIGFlag, 0)
             self._xrig = xrig_context(self._context)
-        elif argData.isFlagSet(kAnimLibraryLongFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryLongFlagXrig, 0)
+        elif arg_data.isFlagSet(SPRC_XRIGFlagLong):
+            self._context = arg_data.flagArgumentString(SPRC_XRIGFlagLong, 0)
             self._xrig = xrig_context(self._context)
         else:
             raise Exception('-x (-xrig) flag needed.')
@@ -628,72 +612,71 @@ class SouthParkMirrorPose(OpenMayaMPx.MPxCommand):
         if namespace is None:
             raise Exception('Select Objects.')
 
-        datas = get_atomic_data(mode='SELECTED', channel_box=False, context=self._context)
-
+        data = get_atomic_data(mode=TRAVEL_MODE.selected, channel_box=False, context=self._context)
         plane = mplane.get_mirror_plane(namespace)
-
         self.results = []
-        selectionList = OpenMaya.MSelectionList()
-        for nodeName, attrsDict in datas.iteritems():
-            switchNodeName = self._xrig.switch(nodeName)
-            _name = '|'.join(namespace+n for n in switchNodeName.split('|'))
+        selection_list = OpenMaya.MSelectionList()
+        for node_name, attr_dict in data.iteritems():
+            switch_name = self._xrig.switch(node_name)
+            this_name = '|'.join(namespace+n for n in node_name.split('|'))
+            that_name = '|'.join(namespace+n for n in switch_name.split('|'))
+
             try:
-                selectionList.add(_name)
+                selection_list.add(that_name)
             except:
                 continue
-            mObj = OpenMaya.MObject()
-            selectionList.getDependNode(0, mObj)
-            dagNodeFn = OpenMaya.MFnDagNode(mObj)
-            selectionList.clear()
+            obj = OpenMaya.MObject()
+            selection_list.getDependNode(0, obj)
+            dag_node_fn = OpenMaya.MFnDagNode(obj)
+            selection_list.clear()
 
-            for attrName, value in attrsDict.iteritems():
-                if not dagNodeFn.hasAttribute(attrName):
+            for attr_name, value in attr_dict.iteritems():
+                if not dag_node_fn.hasAttribute(attr_name):
                     continue
-
-                plug = dagNodeFn.findPlug(attrName)
-
+                plug = dag_node_fn.findPlug(attr_name)
                 if not plug.isKeyable():
                     continue
-
                 if plug.isLocked():
                     continue
-
                 if not plug.isFreeToChange(False, False) == OpenMaya.MPlug.kFreeToChange:
                     continue
-
-                if switchNodeName == nodeName:
-                    aimValue = value
-
-                    if self._xrig.is_md_ctrl(switchNodeName.split('|')[-1]):
-                        if self._xrig.is_md_flip_attr(attrName):
-                            aimValue *= -1
-
+                if switch_name == node_name:
+                    aim_value = value
+                    if self._xrig.is_wt_ctrl(switch_name.split('|')[-1]):
+                        if self._xrig.is_translate_attr(attr_name):
+                            continue
+                        if self._xrig.is_rotate_attr(attr_name):
+                            continue
+                    if self._xrig.is_md_ctrl(switch_name.split('|')[-1]):
+                        if self._xrig.is_md_flip_attr(attr_name):
+                            aim_value *= -1
                 else:
-                    aimValue = value
-
-                    if self._xrig.is_ik_ctrl(switchNodeName.split('|')[-1]):
-                        if self._xrig.is_translate_attr(attrName):
+                    aim_value = value
+                    if self._xrig.is_ik_ctrl(switch_name.split('|')[-1]) or \
+                            self._xrig.is_pole_ctrl(node_name.split('|')[-1]):
+                        if self._xrig.is_translate_attr(attr_name):
                             continue
-                        if self._xrig.is_rotate_attr(attrName):
+                        if self._xrig.is_rotate_attr(attr_name):
                             continue
 
-                    elif self._xrig.is_fk_ctrl(switchNodeName.split('|')[-1]):
-                        if self._xrig.is_translate_attr(attrName):
-                            aimValue = value * -1
+                    elif self._xrig.is_fk_ctrl(switch_name.split('|')[-1]):
+                        if self._xrig.is_translate_attr(attr_name):
+                            aim_value = value * -1
 
                     else:
-                        if self._xrig.is_facial_flip_attr(attrName):
-                            aimValue = value * -1
+                        if self._xrig.is_facial_flip_attr(attr_name):
+                            aim_value = value * -1
 
-                self.modifier.newPlugValueFloat(plug, aimValue)
+                self.modifier.newPlugValueFloat(plug, aim_value)
 
-            if self._xrig.is_ik_ctrl(switchNodeName.split('|')[-1]):
+            if self._xrig.is_ik_ctrl(node_name.split('|')[-1]) or \
+                    self._xrig.is_pole_ctrl(node_name.split('|')[-1]) or \
+                    self._xrig.is_wt_ctrl(node_name.split('|')[-1]):
                 if plane is None:
                     continue
                 result = mplane.magic_mirror(
-                    src='|'.join(namespace+n for n in nodeName.split('|')),
-                    dst='|'.join(namespace+n for n in switchNodeName.split('|')),
-                    plane=plane, active=False, space='world', context=self._context
+                    src=this_name, dst=that_name, plane=plane,
+                    active=False, space='world', context=self._context
                 )
                 result[0].setTranslation(result[1], OpenMaya.MSpace.kWorld)
                 result[0].setRotation(result[2], OpenMaya.MSpace.kWorld)
@@ -717,16 +700,16 @@ def mirrorPoseCmdCreator():
 
 def mirrorPoseSyntaxCreator():
     syntax = OpenMaya.MSyntax()
-    syntax.addFlag(kAnimLibraryFlagXrig, kAnimLibraryLongFlagXrig, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_XRIGFlag, SPRC_XRIGFlagLong, OpenMaya.MSyntax.kString)
     return syntax
 
 
 ########################################################################################
 #
-#        SPFlipPose Cmd
+#        SPRCFlipPose Cmd
 #
 ########################################################################################
-kPluginCmdFlipPose = 'SPFlipPose'
+kPluginCmdFlipPose = 'SPRCFlipPose'
 
 
 class SouthParkFlipPose(OpenMayaMPx.MPxCommand):
@@ -737,12 +720,12 @@ class SouthParkFlipPose(OpenMayaMPx.MPxCommand):
         self.results = None
 
     def parseArgs(self, kArguments):
-        argData = OpenMaya.MArgParser(self.syntax(), kArguments)
-        if argData.isFlagSet(kAnimLibraryFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryFlagXrig, 0)
+        arg_data = OpenMaya.MArgParser(self.syntax(), kArguments)
+        if arg_data.isFlagSet(SPRC_XRIGFlag):
+            self._context = arg_data.flagArgumentString(SPRC_XRIGFlag, 0)
             self._xrig = xrig_context(self._context)
-        elif argData.isFlagSet(kAnimLibraryLongFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryLongFlagXrig, 0)
+        elif arg_data.isFlagSet(SPRC_XRIGFlagLong):
+            self._context = arg_data.flagArgumentString(SPRC_XRIGFlagLong, 0)
             self._xrig = xrig_context(self._context)
         else:
             raise Exception('-x (-xrig) flag needed.')
@@ -756,134 +739,121 @@ class SouthParkFlipPose(OpenMayaMPx.MPxCommand):
         namespace = _namespace()
         if namespace is None:
             raise Exception('Select Objects.')
-
-        datas = get_atomic_data(mode='SELECTED', channel_box=False, context=self._context)
-
+        data = get_atomic_data(mode=TRAVEL_MODE.selected, channel_box=False, context=self._context)
         plane = mplane.get_mirror_plane(namespace)
 
-        selectionList = OpenMaya.MSelectionList()
+        selection_list = OpenMaya.MSelectionList()
         self.results = []
-        for nodeName, attrsDict in datas.iteritems():
-            selectionList.clear()
+        for node_name, attr_dict in data.iteritems():
+            selection_list.clear()
+            switch_name = self._xrig.switch(node_name)
 
-            switchNodeName = self._xrig.switch(nodeName)
-
-            this_name = '|'.join(namespace+n for n in nodeName.split('|'))
-            that_name = '|'.join(namespace+n for n in switchNodeName.split('|'))
+            this_name = '|'.join(namespace+n for n in node_name.split('|'))
+            that_name = '|'.join(namespace+n for n in switch_name.split('|'))
 
             if this_name == that_name:
-                """
-                maybe this is a M_xxx_ctrl.
-                ignore it for now.
-                maybe future we can flip some rotate value.
-                """
-                if not self._xrig.is_md_ctrl(switchNodeName.split('|')[-1]):
+                if self._xrig.is_wt_ctrl(switch_name.split('|')[-1]):
+                    if plane is None:
+                        continue
+                    this_results = mplane.magic_mirror(
+                        src=this_name, dst=that_name, plane=plane,
+                        active=False, space='world', context=self._context
+                    )
+                    this_results[0].setTranslation(this_results[1], OpenMaya.MSpace.kWorld)
+                    this_results[0].setRotation(this_results[2], OpenMaya.MSpace.kWorld)
+                    self.results.append([this_results, this_results])
                     continue
-
-                try:
-                    selectionList.add(this_name)
-                except:
+                elif self._xrig.is_md_ctrl(switch_name.split('|')[-1]):
+                    try:
+                        selection_list.add(this_name)
+                    except:
+                        continue
+                    obj = OpenMaya.MObject()
+                    selection_list.getDependNode(0, obj)
+                    dag_node_fn = OpenMaya.MFnDagNode(obj)
+                    for attrName, value in attr_dict.iteritems():
+                        if not dag_node_fn.hasAttribute(attrName):
+                            continue
+                        plug = dag_node_fn.findPlug(attrName)
+                        if not plug.isKeyable():
+                            continue
+                        if plug.isLocked():
+                            continue
+                        if not plug.isFreeToChange(False, False) == OpenMaya.MPlug.kFreeToChange:
+                            continue
+                        aim_value = plug.asFloat()
+                        if self._xrig.is_md_flip_attr(attrName):
+                            aim_value *= -1
+                        self.modifier.newPlugValueFloat(plug, aim_value)
                     continue
-
-                mobj = OpenMaya.MObject()
-                selectionList.getDependNode(0, mobj)
-                dagNodeFn = OpenMaya.MFnDagNode(mobj)
-
-                for attrName, value in attrsDict.iteritems():
-                    if not dagNodeFn.hasAttribute(attrName):
-                        continue
-
-                    plug = dagNodeFn.findPlug(attrName)
-                    if not plug.isKeyable():
-                        continue
-                    if plug.isLocked():
-                        continue
-                    if not plug.isFreeToChange(False, False) == OpenMaya.MPlug.kFreeToChange:
-                        continue
-
-                    aimValue = plug.asFloat()
-                    if self._xrig.is_md_flip_attr(attrName):
-                        aimValue *= -1
-
-                    self.modifier.newPlugValueFloat(plug, aimValue)
-                continue
+                else:
+                    continue
 
             try:
-                selectionList.add(this_name)
-                selectionList.add(that_name)
+                selection_list.add(this_name)
+                selection_list.add(that_name)
             except:
                 continue
 
-            this_mobj = OpenMaya.MObject()
-            that_mobj = OpenMaya.MObject()
-            selectionList.getDependNode(0, this_mobj)
-            selectionList.getDependNode(1, that_mobj)
+            this_obj = OpenMaya.MObject()
+            that_obj = OpenMaya.MObject()
+            selection_list.getDependNode(0, this_obj)
+            selection_list.getDependNode(1, that_obj)
 
-            this_dagNodeFn = OpenMaya.MFnDagNode(this_mobj)
-            that_dagNodeFn = OpenMaya.MFnDagNode(that_mobj)
+            this_dag_node_fn = OpenMaya.MFnDagNode(this_obj)
+            that_dag_node_fn = OpenMaya.MFnDagNode(that_obj)
 
-            for attrName, value in attrsDict.iteritems():
-                if not that_dagNodeFn.hasAttribute(attrName):
+            for attr_name, value in attr_dict.iteritems():
+                if not that_dag_node_fn.hasAttribute(attr_name):
                     continue
 
-                this_plug = this_dagNodeFn.findPlug(attrName)
-                that_plug = that_dagNodeFn.findPlug(attrName)
+                this_plug = this_dag_node_fn.findPlug(attr_name)
+                that_plug = that_dag_node_fn.findPlug(attr_name)
 
                 if not that_plug.isKeyable():
                     continue
-
                 if that_plug.isLocked():
                     continue
-
                 if not that_plug.isFreeToChange(False, False) == OpenMaya.MPlug.kFreeToChange:
                     continue
 
                 that_value = that_plug.asFloat()
 
-                if switchNodeName == nodeName:
-                    this_aimValue = that_value
-                    that_aimValue = value
+                this_aim_value = that_value
+                that_aim_value = value
 
+                if self._xrig.is_ik_ctrl(node_name.split('|')[-1]) or \
+                        self._xrig.is_pole_ctrl(node_name.split('|')[-1]):
+                    if self._xrig.is_translate_attr(attr_name):
+                        continue
+                    if self._xrig.is_rotate_attr(attr_name):
+                        continue
+                elif self._xrig.is_fk_ctrl(node_name.split('|')[-1]):
+                    if self._xrig.is_translate_attr(attr_name):
+                        this_aim_value = that_value * -1
+                        that_aim_value = value * -1
                 else:
-                    this_aimValue = that_value
-                    that_aimValue = value
-
-                    if self._xrig.is_ik_ctrl(switchNodeName.split('|')[-1]):
-                        if self._xrig.is_translate_attr(attrName):
-                            continue
-                        if self._xrig.is_rotate_attr(attrName):
-                            continue
-
-                    elif self._xrig.is_fk_ctrl(switchNodeName.split('|')[-1]):
-                        if self._xrig.is_translate_attr(attrName):
-                            this_aimValue = that_value * -1
-                            that_aimValue = value * -1
-                    else:
-                        if self._xrig.is_facial_flip_attr(attrName):
-                            this_aimValue = that_value * -1
-                            that_aimValue = value * -1
+                    if self._xrig.is_facial_flip_attr(attr_name):
+                        this_aim_value = that_value * -1
+                        that_aim_value = value * -1
                                 
-                self.modifier.newPlugValueFloat(this_plug, this_aimValue)
-                self.modifier.newPlugValueFloat(that_plug, that_aimValue)
+                self.modifier.newPlugValueFloat(this_plug, this_aim_value)
+                self.modifier.newPlugValueFloat(that_plug, that_aim_value)
 
-            if self._xrig.is_ik_ctrl(switchNodeName.split('|')[-1]):
+            if self._xrig.is_ik_ctrl(node_name.split('|')[-1]) or self._xrig.is_pole_ctrl(node_name.split('|')[-1]):
                 if plane is None:
                     continue
-
                 this_results = mplane.magic_mirror(
                     src=this_name, dst=that_name, plane=plane, active=False, space='world', context=self._context
                 )
                 that_results = mplane.magic_mirror(
                     src=that_name, dst=this_name, plane=plane, active=False, space='world', context=self._context
                 )
-
                 this_results[0].setTranslation(this_results[1], OpenMaya.MSpace.kWorld)
                 this_results[0].setRotation(this_results[2], OpenMaya.MSpace.kWorld)
                 that_results[0].setTranslation(that_results[1], OpenMaya.MSpace.kWorld)
                 that_results[0].setRotation(that_results[2], OpenMaya.MSpace.kWorld)
-
                 self.results.append([this_results, that_results])
-
         self.modifier.doIt()
 
     def undoIt(self):
@@ -904,16 +874,16 @@ def flipPoseCmdCreator():
 
 def flipPoseSyntaxCreator():
     syntax = OpenMaya.MSyntax()
-    syntax.addFlag(kAnimLibraryFlagXrig, kAnimLibraryLongFlagXrig, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_XRIGFlag, SPRC_XRIGFlagLong, OpenMaya.MSyntax.kString)
     return syntax
 
 
 ########################################################################################
 #
-#        SPMirrorSelect Cmd
+#        SPRCMirrorSelect Cmd
 #
 ########################################################################################
-kPluginCmdMirrorSelect = 'SPMirrorSelect'
+kPluginCmdMirrorSelect = 'SPRCMirrorSelect'
 
 
 class SouthParkMirrorSelect(OpenMayaMPx.MPxCommand):
@@ -925,18 +895,18 @@ class SouthParkMirrorSelect(OpenMayaMPx.MPxCommand):
 
     def parseArgs(self, kArguments):
         argData = OpenMaya.MArgParser(self.syntax(), kArguments)
-        if argData.isFlagSet(kAnimLibraryFlagKeep):
-            self.keep = argData.flagArgumentBool(kAnimLibraryFlagKeep, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagKeep):
-            self.keep = argData.flagArgumentBool(kAnimLibraryLongFlagKeep, 0)
+        if argData.isFlagSet(SPRC_KeepFlag):
+            self.keep = argData.flagArgumentBool(SPRC_KeepFlag, 0)
+        elif argData.isFlagSet(SPRC_KeepFlagLong):
+            self.keep = argData.flagArgumentBool(SPRC_KeepFlagLong, 0)
         else:
             self.keep = True
 
-        if argData.isFlagSet(kAnimLibraryFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryFlagXrig, 0)
+        if argData.isFlagSet(SPRC_XRIGFlag):
+            self._context = argData.flagArgumentString(SPRC_XRIGFlag, 0)
             self._xrig = xrig_context(self._context)
-        elif argData.isFlagSet(kAnimLibraryLongFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryLongFlagXrig, 0)
+        elif argData.isFlagSet(SPRC_XRIGFlagLong):
+            self._context = argData.flagArgumentString(SPRC_XRIGFlagLong, 0)
             self._xrig = xrig_context(self._context)
         else:
             raise Exception('-x (-xrig) flag needed.')
@@ -951,24 +921,24 @@ class SouthParkMirrorSelect(OpenMayaMPx.MPxCommand):
         if namespace is None:
             raise Exception('Select Objects.')
 
-        nodes = _travel(mode='SELECTED', context=self._context)
-        selectionList = OpenMaya.MSelectionList()
-        selectionList.clear()
+        nodes = _travel(mode=TRAVEL_MODE.selected, context=self._context)
+        selection_list = OpenMaya.MSelectionList()
+        selection_list.clear()
         for node in nodes:
-            dagNodeFn = OpenMaya.MFnDagNode(node)
-            nodeName = '|'.join([token.split(':')[-1] for token in dagNodeFn.partialPathName().split('|')])
+            dag_node_fn = OpenMaya.MFnDagNode(node)
+            node_name = '|'.join([token.split(':')[-1] for token in dag_node_fn.partialPathName().split('|')])
 
-            switchNodeName = self._xrig.switch(nodeName)
-            _name = '|'.join(namespace+n for n in switchNodeName.split('|'))
+            switch_name = self._xrig.switch(node_name)
+            _name = '|'.join(namespace+n for n in switch_name.split('|'))
             if self.keep:
-                selectionList.add(dagNodeFn.fullPathName(), False)
+                selection_list.add(dag_node_fn.fullPathName(), False)
                 
             try:
-                selectionList.add(_name, False)
+                selection_list.add(_name, False)
             except:
                 continue
 
-        OpenMaya.MGlobal.setActiveSelectionList(selectionList, OpenMaya.MGlobal.kReplaceList)
+        OpenMaya.MGlobal.setActiveSelectionList(selection_list, OpenMaya.MGlobal.kReplaceList)
 
     def undoIt(self):
         OpenMaya.MGlobal.setActiveSelectionList(self.bufferSelectionList)
@@ -983,17 +953,17 @@ def mirrorSelectCmdCreator():
 
 def mirrorSelectSyntaxCreator():
     syntax = OpenMaya.MSyntax()
-    syntax.addFlag(kAnimLibraryFlagKeep, kAnimLibraryLongFlagKeep, OpenMaya.MSyntax.kBoolean)
-    syntax.addFlag(kAnimLibraryFlagXrig, kAnimLibraryLongFlagXrig, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_KeepFlag, SPRC_KeepFlagLong, OpenMaya.MSyntax.kBoolean)
+    syntax.addFlag(SPRC_XRIGFlag, SPRC_XRIGFlagLong, OpenMaya.MSyntax.kString)
     return syntax
 
 
 ########################################################################################
 #
-#        SPResetControl Cmd
+#        SPRCResetControl Cmd
 #
 ########################################################################################
-kPluginCmdReset = 'SPResetControl'
+kPluginCmdReset = 'SPRCResetControl'
 
 
 class SouthParkReset(OpenMayaMPx.MPxCommand):
@@ -1005,42 +975,41 @@ class SouthParkReset(OpenMayaMPx.MPxCommand):
         self.modifier = OpenMaya.MDGModifier()
 
     def parseArgs(self, kArguments):
-        argData = OpenMaya.MArgParser(self.syntax(), kArguments)
-        if argData.isFlagSet(kAnimLibraryFlagTravelMode):
-            self.travel_mode = argData.flagArgumentString(kAnimLibraryFlagTravelMode, 0)
-        elif argData.isFlagSet(kAnimLibraryLongFlagTravelMode):
-            self.travel_mode = argData.flagArgumentString(kAnimLibraryLongFlagTravelMode, 0)
+        arg_data = OpenMaya.MArgParser(self.syntax(), kArguments)
+        if arg_data.isFlagSet(SPRC_TravelModeFlag):
+            self.travel_mode = arg_data.flagArgumentString(SPRC_TravelModeFlag, 0)
+        elif arg_data.isFlagSet(SPRC_TravelModeFlagLong):
+            self.travel_mode = arg_data.flagArgumentString(SPRC_TravelModeFlagLong, 0)
         else:
-            self.travel_mode = 'SELECTED'
+            self.travel_mode = TRAVEL_MODE.selected
 
-        if argData.isFlagSet(kAnimLibraryFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryFlagXrig, 0)
+        if arg_data.isFlagSet(SPRC_XRIGFlag):
+            self._context = arg_data.flagArgumentString(SPRC_XRIGFlag, 0)
             self._xrig = xrig_context(self._context)
-        elif argData.isFlagSet(kAnimLibraryLongFlagXrig):
-            self._context = argData.flagArgumentString(kAnimLibraryLongFlagXrig, 0)
+        elif arg_data.isFlagSet(SPRC_XRIGFlagLong):
+            self._context = arg_data.flagArgumentString(SPRC_XRIGFlagLong, 0)
             self._xrig = xrig_context(self._context)
         else:
             raise Exception('-x (-xrig) flag needed.')
 
     def __reset(self, plug):
-        scriptUtil = OpenMaya.MScriptUtil()
+        script_util = OpenMaya.MScriptUtil()
         attr = plug.attribute()
         if attr.hasFn(OpenMaya.MFn.kUnitAttribute):
-            attrFn = OpenMaya.MFnUnitAttribute(attr)
-            unitType = attrFn.unitType()
+            attr_fn = OpenMaya.MFnUnitAttribute(attr)
+            unit_type = attr_fn.unitType()
 
-            if unitType == OpenMaya.MFnUnitAttribute.kAngle or \
-               unitType == OpenMaya.MFnUnitAttribute.kDistance:
-                ptr = scriptUtil.asDoublePtr()
-                attrFn.getDefault(ptr)
-                value = scriptUtil.getDouble(ptr)
+            if unit_type == OpenMaya.MFnUnitAttribute.kAngle or unit_type == OpenMaya.MFnUnitAttribute.kDistance:
+                ptr = script_util.asDoublePtr()
+                attr_fn.getDefault(ptr)
+                value = script_util.getDouble(ptr)
 
                 self.modifier.newPlugValueDouble(plug, value)
 
-            elif unitType == OpenMaya.MFnUnitAttribute.kTime:
-                ptr = scriptUtil.asDoublePtr()
-                attrFn.getDefault(ptr)
-                value = scriptUtil.getDouble(ptr)
+            elif unit_type == OpenMaya.MFnUnitAttribute.kTime:
+                ptr = script_util.asDoublePtr()
+                attr_fn.getDefault(ptr)
+                value = script_util.getDouble(ptr)
 
                 t = OpenMaya.MTime(value)
                 self.modifier.newPlugValueMTime(plug, t)
@@ -1048,54 +1017,53 @@ class SouthParkReset(OpenMayaMPx.MPxCommand):
                 pass
 
         elif attr.hasFn(OpenMaya.MFn.kNumericAttribute):
-            attrFn = OpenMaya.MFnNumericAttribute(attr)
-            unitType = attrFn.unitType()
+            attr_fn = OpenMaya.MFnNumericAttribute(attr)
+            unit_type = attr_fn.unitType()
 
-            if unitType == OpenMaya.MFnNumericData.kBoolean:
-                ptr = scriptUtil.asBoolPtr()
-                attrFn.getDefault(ptr)
-                value = scriptUtil.getBool(ptr)
+            if unit_type == OpenMaya.MFnNumericData.kBoolean:
+                ptr = script_util.asBoolPtr()
+                attr_fn.getDefault(ptr)
+                value = script_util.getBool(ptr)
                 self.modifier.newPlugValueBool(plug, value)
 
-            elif unitType == OpenMaya.MFnNumericData.kByte or \
-                 unitType == OpenMaya.MFnNumericData.kChar:
-                ptr = scriptUtil.asCharPtr()
-                attrFn.getDefault(ptr)
-                value = scriptUtil.getChar(ptr)
+            elif unit_type == OpenMaya.MFnNumericData.kByte or unit_type == OpenMaya.MFnNumericData.kChar:
+                ptr = script_util.asCharPtr()
+                attr_fn.getDefault(ptr)
+                value = script_util.getChar(ptr)
                 self.modifier.newPlugValueChar(plug, value)
 
-            elif unitType == OpenMaya.MFnNumericData.kShort:
-                ptr = scriptUtil.asShortPtr()
-                attrFn.getDefault(ptr)
-                value = scriptUtil.getShort(ptr)
+            elif unit_type == OpenMaya.MFnNumericData.kShort:
+                ptr = script_util.asShortPtr()
+                attr_fn.getDefault(ptr)
+                value = script_util.getShort(ptr)
                 self.modifier.newPlugValueShort(plug, value)
 
-            elif unitType == OpenMaya.MFnNumericData.kLong:
-                ptr = scriptUtil.asIntPtr()
-                attrFn.getDefault(ptr)
-                value = scriptUtil.getInt(ptr)
+            elif unit_type == OpenMaya.MFnNumericData.kLong:
+                ptr = script_util.asIntPtr()
+                attr_fn.getDefault(ptr)
+                value = script_util.getInt(ptr)
                 self.modifier.newPlugValueInt(plug, value)
 
-            elif unitType == OpenMaya.MFnNumericData.kFloat:
-                ptr = scriptUtil.asDoublePtr()
-                attrFn.getDefault(ptr)
-                value = scriptUtil.getDouble(ptr)
+            elif unit_type == OpenMaya.MFnNumericData.kFloat:
+                ptr = script_util.asDoublePtr()
+                attr_fn.getDefault(ptr)
+                value = script_util.getDouble(ptr)
                 self.modifier.newPlugValueFloat(plug, float(value))
 
-            elif unitType == OpenMaya.MFnNumericData.kDouble:
-                ptr = scriptUtil.asDoublePtr()
-                attrFn.getDefault(ptr)
-                value = scriptUtil.getDouble(ptr)
+            elif unit_type == OpenMaya.MFnNumericData.kDouble:
+                ptr = script_util.asDoublePtr()
+                attr_fn.getDefault(ptr)
+                value = script_util.getDouble(ptr)
                 self.modifier.newPlugValueDouble(plug, value)
 
             else:
                 pass
 
         elif attr.hasFn(OpenMaya.MFn.kEnumAttribute):
-            attrFn = OpenMaya.MFnEnumAttribute(attr)
-            ptr = scriptUtil.asShortPtr()
-            attrFn.getDefault(ptr)
-            value = scriptUtil.getShort(ptr)
+            attr_fn = OpenMaya.MFnEnumAttribute(attr)
+            ptr = script_util.asShortPtr()
+            attr_fn.getDefault(ptr)
+            value = script_util.getShort(ptr)
 
             self.modifier.newPlugValueShort(plug, value)
 
@@ -1109,47 +1077,44 @@ class SouthParkReset(OpenMayaMPx.MPxCommand):
         if not len(nodes):
             return
 
-        plugArray = OpenMaya.MPlugArray()
-
-        selectionList = OpenMaya.MSelectionList()
+        plug_array = OpenMaya.MPlugArray()
+        selection_list = OpenMaya.MSelectionList()
         for node in nodes:
-            plugArray.clear()
-            selectionList.clear()
-            selectionList.add(node)
+            plug_array.clear()
+            selection_list.clear()
+            selection_list.add(node)
+            OpenMayaAnim.MAnimUtil.findAnimatablePlugs(selection_list, plug_array)
 
-            OpenMayaAnim.MAnimUtil.findAnimatablePlugs(selectionList, plugArray)
-
-            for i in xrange(plugArray.length()):
-                if not plugArray[i].isKeyable():
+            for i in xrange(plug_array.length()):
+                if not plug_array[i].isKeyable():
                     continue
 
-                if plugArray[i].isLocked():
+                if plug_array[i].isLocked():
                     continue
 
-                if not plugArray[i].isFreeToChange(False, False) == OpenMaya.MPlug.kFreeToChange:
+                if not plug_array[i].isFreeToChange(False, False) == OpenMaya.MPlug.kFreeToChange:
                     continue
 
-                linkPlugArray = OpenMaya.MPlugArray()
-                plugArray[i].connectedTo(linkPlugArray, True, False)
-                if linkPlugArray.length():
-                    connectedNode = linkPlugArray[0].node()
+                link_plug_array = OpenMaya.MPlugArray()
+                plug_array[i].connectedTo(link_plug_array, True, False)
+                if link_plug_array.length():
+                    connected_node = link_plug_array[0].node()
 
-                    if (connectedNode.hasFn(OpenMaya.MFn.kAnimCurveTimeToAngular) or
-                        connectedNode.hasFn(OpenMaya.MFn.kAnimCurveTimeToDistance) or
-                        connectedNode.hasFn(OpenMaya.MFn.kAnimCurveTimeToTime) or
-                        connectedNode.hasFn(OpenMaya.MFn.kAnimCurveTimeToUnitless)
+                    if (connected_node.hasFn(OpenMaya.MFn.kAnimCurveTimeToAngular) or
+                        connected_node.hasFn(OpenMaya.MFn.kAnimCurveTimeToDistance) or
+                        connected_node.hasFn(OpenMaya.MFn.kAnimCurveTimeToTime) or
+                        connected_node.hasFn(OpenMaya.MFn.kAnimCurveTimeToUnitless)
                         ):
+                        self.__reset(plug_array[i])
 
-                        self.__reset(plugArray[i])
-
-                    elif (connectedNode.hasFn(OpenMaya.MFn.kAimConstraint) or
-                          connectedNode.hasFn(OpenMaya.MFn.kOrientConstraint) or
-                          connectedNode.hasFn(OpenMaya.MFn.kPointConstraint) or
-                          connectedNode.hasFn(OpenMaya.MFn.kParentConstraint) or
-                          connectedNode.hasFn(OpenMaya.MFn.kScaleConstraint) or
-                          connectedNode.hasFn(OpenMaya.MFn.kTangentConstraint) or
-                          connectedNode.hasFn(OpenMaya.MFn.kPoleVectorConstraint) or
-                          connectedNode.hasFn(OpenMaya.MFn.kSymmetryConstraint)
+                    elif (connected_node.hasFn(OpenMaya.MFn.kAimConstraint) or
+                          connected_node.hasFn(OpenMaya.MFn.kOrientConstraint) or
+                          connected_node.hasFn(OpenMaya.MFn.kPointConstraint) or
+                          connected_node.hasFn(OpenMaya.MFn.kParentConstraint) or
+                          connected_node.hasFn(OpenMaya.MFn.kScaleConstraint) or
+                          connected_node.hasFn(OpenMaya.MFn.kTangentConstraint) or
+                          connected_node.hasFn(OpenMaya.MFn.kPoleVectorConstraint) or
+                          connected_node.hasFn(OpenMaya.MFn.kSymmetryConstraint)
                           ):
                         """
                         do nothing, constrainted attr don't reset.
@@ -1160,7 +1125,7 @@ class SouthParkReset(OpenMayaMPx.MPxCommand):
                         pass
 
                 else:
-                    self.__reset(plugArray[i])
+                    self.__reset(plug_array[i])
         self.modifier.doIt()
 
     def redoIt(self):
@@ -1179,14 +1144,14 @@ def resetCmdCreator():
 
 def resetSyntaxCreator():
     syntax = OpenMaya.MSyntax()
-    syntax.addFlag(kAnimLibraryFlagTravelMode, kAnimLibraryLongFlagTravelMode, OpenMaya.MSyntax.kString)
-    syntax.addFlag(kAnimLibraryFlagXrig, kAnimLibraryLongFlagXrig, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_TravelModeFlag, SPRC_TravelModeFlagLong, OpenMaya.MSyntax.kString)
+    syntax.addFlag(SPRC_XRIGFlag, SPRC_XRIGFlagLong, OpenMaya.MSyntax.kString)
     return syntax
 
 
 ########################################################################################
 #
-#    initializePlugin / uninitializePlugin
+#    initializePlugin / un-initializePlugin
 #
 ########################################################################################
 def initializePlugin(mobject):

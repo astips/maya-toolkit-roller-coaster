@@ -20,20 +20,21 @@ class SmartHud(object):
         for each in self.defaults:
             try:
                 self.defaults_v.append(pm.windows.headsUpDisplay(each, q=True, vis=True))
-            except:
+            except Exception as e:
+                print e
                 self.defaults_v.append(False)
 
     def clean(self):
         """
-        hide defaults' hud
+        hide default hud
         hide view cube
         """
         pm.windows.viewManip(v=False)
         for item in self.defaults:
             try:
                 pm.windows.headsUpDisplay(item, e=True, vis=False)
-            except:
-                pass
+            except Exception as e:
+                print e
 
     def create(self, n='', s=0, **kwargs):
         """
@@ -44,14 +45,14 @@ class SmartHud(object):
         
     def hide(self):
         """
-        hide user 's hud
+        hide user's hud
         """
         for hud in self.users:
             pm.windows.headsUpDisplay(hud, e=True, vis=False)
             
     def smart_hide(self):
         """
-        hide user 's hud by smart way
+        hide user's hud by smart way
         """
         huds = pm.windows.headsUpDisplay(listHeadsUpDisplays=True)
         for hud in huds:
@@ -60,14 +61,14 @@ class SmartHud(object):
             
     def show(self):
         """
-        show user 's hud
+        show user's hud
         """
         for hud in self.users:
             pm.windows.headsUpDisplay(hud, e=True, vis=True)
             
     def smart_show(self):
         """
-        show user 's hud by smart way
+        show user's hud by smart way
         """
         huds = pm.windows.headsUpDisplay(listHeadsUpDisplays=True)
         for hud in huds:
@@ -76,18 +77,18 @@ class SmartHud(object):
                     
     def remove(self):
         """
-        remove user 's hud
+        remove user's hud
         """
         for hud in self.users:
             try:
                 pm.windows.headsUpDisplay(hud, remove=True)
-            except:
-                pass
+            except Exception as e:
+                print e
         self.users = []
 
     def smart_remove(self):
         """
-        remove other user 's hud (which created by other tool)
+        remove other user's hud (which created by other tool)
         """
         pm.windows.viewManip(v=False)
         huds = pm.windows.headsUpDisplay(listHeadsUpDisplays=True)
@@ -96,24 +97,24 @@ class SmartHud(object):
             if hud not in self.defaults:
                 try:
                     pm.windows.headsUpDisplay(hud, remove=True)
-                except:
-                    pass
+                except Exception as e:
+                    print e
 
     def recovery(self):
         """
-        remove all user 's hud
-        set default 's hud to record status
+        remove all user's hud
+        set default hud to record status
         """
         self.remove()
         for i in range(len(self.defaults)):
             try:
                 pm.windows.headsUpDisplay(self.defaults[i], e=True, vis=self.defaults_v[i])
-            except:
-                pass
+            except Exception as e:
+                print e
 
     def color(self, colors=None):
         """
-        color the hud 's label & value
+        color the hud's label & value
         parameter :
             colors=[int, int] # default is [16, 17]
         """
@@ -122,8 +123,8 @@ class SmartHud(object):
         try:
             pm.general.displayColor('headsUpDisplayLabels', colors[0], dormant=True)
             pm.general.displayColor('headsUpDisplayValues', colors[1], dormant=True)
-        except:
-            pass
+        except Exception as e:
+            print e
             
     def ruin(self):
         """

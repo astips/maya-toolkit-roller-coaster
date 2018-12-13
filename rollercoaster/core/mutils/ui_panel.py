@@ -103,8 +103,8 @@ class IndividualModelPanel(object):
             panel = self.panel
         try:
             pm.windows.deleteUI(panel, panel=True)
-        except:
-            pass
+        except Exception as e:
+            print e
 
     def toggle_grid(self, panel=None):
         if panel is None:

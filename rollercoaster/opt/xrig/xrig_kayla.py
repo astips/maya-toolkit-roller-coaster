@@ -8,6 +8,8 @@ class XRigContext(XRigBase):
 
     CTRL_TAG = ['_CON']
 
+    WEIGHT_CENTER_CTRL_TAG = ['_ac_cn_upperbody']
+
     LT_CTRL_TAG = ['L_']
     LT_CTRL_FORMAT = ['L_*']
 
@@ -19,6 +21,9 @@ class XRigContext(XRigBase):
 
     IK_CTRL_TAG = ['_ik']
     FK_CTRL_TAG = ['_fk']
+
+    POLE_CTRL_TAG = ['Pole']
+    POLE_CTRL_FORMAT = ['*_ac_*Pole']
 
     IK_FLIP_ATTR = []
     MD_FLIP_ATTR = []

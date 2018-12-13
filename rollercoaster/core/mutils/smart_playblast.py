@@ -6,9 +6,6 @@ from . import smart_panel
 from . import smart_hud
 
 
-QUEUER_DIR_NAME = 'queue'
-
-
 class SmartPlayblast(object):
 
     _TYPE = '.mov'
@@ -21,19 +18,19 @@ class SmartPlayblast(object):
         self.smart_hud = smart_hud.SmartHud()
 
     def playblast(self, panel_edit=True, hud_edit=True, path='', camera='', quality=100,
-                  res=None, sf=0, ef=0, type='qt', compress='png', audio='', **kargs):
+                  res=None, sf=0, ef=0, type='qt', compress='png', audio='', **kwargs):
 
         if res is None:
             res = [960, 540]
 
-        objs = pm.general.selected()
+        objects = pm.general.selected()
         pm.general.select(cl=True)
 
         try:
             pm.animation.playbackOptions(edit=True, by=1.0)
-        except:
+        except Exception as e:
+            print e
             traceback.print_exc()
-            pass
 
         if panel_edit is True:
             self.smart_panel.record()
@@ -44,44 +41,47 @@ class SmartPlayblast(object):
         if camera:
             try:
                 pm.rendering.lookThru(camera)
-            except:
+            except Exception as e:
+                print e
                 traceback.print_exc()
 
         if type == 'qt':
             try:
                 pm.animation.playblast(
                     format=type, f=path, fo=True, sqt=False, cc=True, v=True, orn=True, os=True, fp=1,
-                    p=100, compression=compress, qlt=quality, wh=res, st=sf, et=ef, sound=audio, **kargs
+                    p=100, compression=compress, qlt=quality, wh=res, st=sf, et=ef, sound=audio, **kwargs
                 )
                 if panel_edit is True:
                     self.smart_panel.reback()
-                pm.general.select(objs, r=True)
+                pm.general.select(objects, r=True)
                 return path + self._TYPE
-            except:
+            except Exception as e:
+                print e
                 if panel_edit is True:
                     self.smart_panel.reback()
                 if hud_edit is True:
                     self.smart_hud.recovery()
-                pm.general.select(objs, r=True)
-                pm.system.displayError('Can not be overwrite, Opened by player ?')
+                pm.general.select(objects, r=True)
+                pm.system.displayError("Can't overwrite, File opened?")
                 traceback.print_exc()
                 return None
         elif type == 'image':
             try:
                 pm.animation.playblast(
                     format=type, f=path, fo=True, sqt=False, cc=True, v=False, orn=True, os=True, fp=1,
-                    p=100, compression=compress, qlt=quality, wh=res, st=sf, et=ef, sound=audio, **kargs
+                    p=100, compression=compress, qlt=quality, wh=res, st=sf, et=ef, sound=audio, **kwargs
                 )
                 if panel_edit is True:
                     self.smart_panel.reback()
-                pm.general.select(objs, r=True)
-            except:
+                pm.general.select(objects, r=True)
+            except Exception as e:
+                print e
                 if panel_edit is True:
                     self.smart_panel.reback()
                 if hud_edit is True:
                     self.smart_hud.recovery()
-                pm.general.select(objs, r=True)
-                pm.system.displayError('Can not be overwrite, Opened by player ?')
+                pm.general.select(objects, r=True)
+                pm.system.displayError("Can't overwrite, File opened?")
                 traceback.print_exc()
                 return None
         else:
