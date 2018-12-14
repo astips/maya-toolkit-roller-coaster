@@ -177,6 +177,10 @@ class FilterContext(FilterBase):
 - Community version has full features but quantitative restrictions, such as can only create 2 Shows.
  
  
+### RELEASE INFO
+![RELEASE INFO](rollercoaster/RELEASE.md)
+
+
 ### HAVING ISSUES?
 Please send an email with the error message and a detailed step by step process of how you got the error.
 Comments, suggestions and bug reports are welcome.  
