@@ -14,7 +14,7 @@ class SmartPanel(object):
         sp.record()
         sp.p_dict
         sp.player()
-        sp.reback()
+        sp.recovery()
         sp.clean()
     """
 
@@ -49,7 +49,7 @@ class SmartPanel(object):
         for panel in self.panels:
             pm.windows.modelEditor(panel, e=True, alo=False)
 
-    def reback(self):
+    def recovery(self):
         for panel in self.panels:
             for v_type in self.v_types:
                 cmd_str = "pm.windows.modelEditor(panel, e=True, {0}={1})".format(

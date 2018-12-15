@@ -1,15 +1,15 @@
 # maya-toolkit-roller-coaster
 Maya toolkit used to save/load pose and motion-clip.
 
-![Example UI](images/applypose.gif)
+![APPLY POSE](images/applypose.gif)
 
 
 ### FEATURE
 - Save pose and motion-clip
 - Copy/Paste pose and motion-clip
 - Mirror/Flip pose
-- MMB drag for fast pose blending
 - Insert, merge and replace animation
+- MMB drag for fast pose blending
 - LMB drag and drop to organize items
 - Custom rig context
 - Marking menu for Maya
@@ -18,18 +18,18 @@ Maya toolkit used to save/load pose and motion-clip.
 
 
 ### DEPENDENCY
-You need to install these two dependencies correctly first.
-- **QtSide** https://github.com/astips/QtSide
-- **Mirror Plane** https://github.com/astips/maya-plugin-mirror-plane
+need to first install these two dependencies correctly.
+- [QtSide](https://github.com/astips/QtSide)
+- [MirrorPlane](https://github.com/astips/maya-plugin-mirror-plane).
 
 
 ### INSTALLATION
 1. Download the latest release and unzip the folder where you want to live.
-2. Copy folder "rollercoaster" into %USERPROFILE%/Documents/maya/scripts
+2. Copy folder "_rollercoaster_" into %USERPROFILE%/Documents/maya/scripts
 
 
 ### USAGE
-You need to value the _**QT_SIDE_BINDING**_ env-var before running the toolkit if you 
+need to value the _**QT_SIDE_BINDING**_ env-var before running the toolkit if you 
 didn't set it up when maya launched.
 ```python
 import os
@@ -89,13 +89,13 @@ disable_hotkey()
     "email": "animator.well@gmail.com"
 }
 ```
-- "manager" -- define super users of this toolkit (who can manager the **Official Tab**)
+- "manager" -- super users of this toolkit (means who have permission on **Official Tab**)
 - "context" -- x-rig context names configured by user
-- "email" -- your license register email used to auth professional version license
+- "email" -- your register email used to auth professional version license
 
 
 ### CONTEXT
-Because of the diversity of rigging files, **rollercoaster** tool allow users config their own
+Because of the diversity of rigging files, **rollercoaster** allow users config their own
 xrig & filter contexts.
 
 - **XRIG Context Option** > rollercoaster/opt/xrig
@@ -109,6 +109,8 @@ class XRigContext(XRigBase):
     
     CTRL_TAG = ['_CON']
 
+    WEIGHT_CENTER_CTRL_TAG = ['_root_']
+    
     LT_CTRL_TAG = ['L_']
     LT_CTRL_FORMAT = ['L_*']
 
@@ -120,6 +122,9 @@ class XRigContext(XRigBase):
 
     IK_CTRL_TAG = ['_ik']
     FK_CTRL_TAG = ['_fk']
+    
+    POLE_CTRL_TAG = ['_pole_']
+    POLE_CTRL_FORMAT = ['*_pole_CON']
 ```
 
 - **FILTER Context Option** > rollercoaster/opt/filter
@@ -157,17 +162,17 @@ class FilterContext(FilterBase):
 ### GIF IMAGES
 
 - **Set Path**
-![Example UI](images/setpath.gif)
+![SET PATH](images/setpath.gif)
 
 - **Create Folder Tree**
-![Example UI](images/createtree.gif)
+![CREATE TREE](images/createtree.gif)
 
 - **Create Pose**
-![Example UI](images/createpose.gif)
+![CREATE POSE](images/createpose.gif)
 
 - **HotKey & MirrorPlane**
-![Example UI](images/mirrorplane.gif)
-![Example UI](images/mirrorplane2.gif)
+![MARKING MENU](images/mirrorplane.gif)
+![MIRROR PLANE](images/mirrorplane2.gif)
 
 
 ### ATTENTION !
@@ -178,7 +183,7 @@ class FilterContext(FilterBase):
  
  
 ### RELEASE INFO
-![RELEASE INFO](rollercoaster/RELEASE.md)
+[RELEASE INFO](rollercoaster/RELEASE.md)
 
 
 ### HAVING ISSUES?

@@ -52,13 +52,13 @@ class SmartPlayblast(object):
                     p=100, compression=compress, qlt=quality, wh=res, st=sf, et=ef, sound=audio, **kwargs
                 )
                 if panel_edit is True:
-                    self.smart_panel.reback()
+                    self.smart_panel.recovery()
                 pm.general.select(objects, r=True)
                 return path + self._TYPE
             except Exception as e:
                 print e
                 if panel_edit is True:
-                    self.smart_panel.reback()
+                    self.smart_panel.recovery()
                 if hud_edit is True:
                     self.smart_hud.recovery()
                 pm.general.select(objects, r=True)
@@ -68,16 +68,16 @@ class SmartPlayblast(object):
         elif type == 'image':
             try:
                 pm.animation.playblast(
-                    format=type, f=path, fo=True, sqt=False, cc=True, v=False, orn=True, os=True, fp=1,
-                    p=100, compression=compress, qlt=quality, wh=res, st=sf, et=ef, sound=audio, **kwargs
+                    format=type, f=path, fo=True, sqt=False, cc=True, v=False, orn=True, os=True,
+                    fp=1, p=100, compression=compress, qlt=quality, wh=res, st=sf, et=ef, **kwargs
                 )
                 if panel_edit is True:
-                    self.smart_panel.reback()
+                    self.smart_panel.recovery()
                 pm.general.select(objects, r=True)
             except Exception as e:
                 print e
                 if panel_edit is True:
-                    self.smart_panel.reback()
+                    self.smart_panel.recovery()
                 if hud_edit is True:
                     self.smart_hud.recovery()
                 pm.general.select(objects, r=True)

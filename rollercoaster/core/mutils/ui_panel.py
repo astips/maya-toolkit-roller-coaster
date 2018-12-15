@@ -33,7 +33,7 @@ class IndividualModelPanel(object):
         ptr = OpenMayaUI.MQtUtil.findControl(self.panel)
         return ui_wrapper.wrapinstance(long(ptr), QtWidgets.QWidget)
 
-    def setFixedSize(self, w, h):
+    def set_size(self, w, h):
         qtwidget = self.qwidget()
         qtwidget.setFixedSize(w, h)
 
