@@ -3,6 +3,7 @@
 - Fix flip pose bug
 - Fix input dialog's text check bug
 - Fix editor resize bug
+- Fix contextor preset bug
 - Add weight-center-ctrl & pole-ctrl items to opt/xrig
 - Add license bulletin board widget
 
